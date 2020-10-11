@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wanting.me.mapper.CourseMapper">
+   <insert id="add" parameterType="Course">
+       INSERT INTO course
+        (name, teacher_id, teacher_name, college, team, create_time, update_time, remark)
+        VALUES
+        (#{name}, #{teacherId}, #{teacherName}, #{college}, #{team}, #{createTime}, #{updateTime}, #{remark})
+   </insert>
+
+    <delete id="del" parameterType="int">
+      delete from course where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="int">
+        UPDATE course SET
+        name = #{name}
+        teacher_id = #{teacherId}
+        teacher_name = #{teacherName}
+        college = #{college}
+        team = #{team}
+        update_time = #{updateTime}
+        remark = #{remark}
+        where
+        id=#{id}
+    </update>
+
+    <select id="getById" parameterType="int" resultType="Course">
+        select  * from course where id=#{id}
+    </select>
+    <select id="search" >
+        select  * from course
+         limit page,rows
+    </select>
+
+    <select id="countTotal">
+         select count(*) from course limit page,rows
+    </select>
+</mapper>
