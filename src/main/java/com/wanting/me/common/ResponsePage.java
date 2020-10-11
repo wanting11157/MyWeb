@@ -4,8 +4,11 @@ import java.util.List;
 
 public class ResponsePage extends ResponseResult{
     private List<Object> listData;
+    //现在第几页
     private Integer page;
+    //每页有多少行
     private Integer rows;
+    //一共有多少行
     private Integer total;
 
     public List<Object> getListData() {

@@ -33,7 +33,7 @@
          limit page,rows
     </select>
 
-    <select id="countTotal">
+    <select id="countTotal" resultType="int">
          select count(*) from course limit page,rows
     </select>
 </mapper>
