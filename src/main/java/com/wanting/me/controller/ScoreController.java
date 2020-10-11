@@ -64,7 +64,7 @@ public class ScoreController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(Integer id){
+    public ResponseResult getById(int id){
         ResponseResult result = new ResponseResult();
         Course course = courseService.getById(id);
         if(course == null){
@@ -79,7 +79,7 @@ public class ScoreController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(Course course,Integer page ,Integer rows){
+    public ResponsePage search(Course course,int page ,int rows){
         ResponsePage result = new ResponsePage();
         List<Course> courses = courseService.search(course, page, rows);
         if(courses == null || courses.size() < 1){

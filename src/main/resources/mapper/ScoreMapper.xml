@@ -4,16 +4,16 @@
 
    <insert id="add" parameterType="Score">
        INSERT INTO score
-        (course_id,score,student_id,create_time,update_time,remark)
+        (course_id,score,student_id,create_time,remark)
         VALUES
-        (#{courseId}, #{score}, #{studentId}, #{createTime}, #{updateTime}, #{remark})
+        (#{courseId}, #{score}, #{studentId}, #{createTime}, #{remark})
    </insert>
 
     <delete id="del" parameterType="int">
       delete from score where id=#{id}
     </delete>
 
-    <update id="update" parameterType="int">
+    <update id="update" parameterType="Score">
         UPDATE score SET
         course_id = #{courseId}
         score = #{score}
@@ -27,12 +27,12 @@
     <select id="getById" parameterType="int" resultType="Score">
         select  * from score where id=#{id}
     </select>
-    <select id="search" >
+    <select id="search" parameterType="ResponsePage" resultType="List">
         select  * from score
-         limit page,rows
+         limit (page-1)*rows,rows
     </select>
 
-    <select id="countTotal" resultType="int">
-         select count(*) from score limit page,rows
+    <select id="countTotal" parameterType="ResponsePage" resultType="Integer">
+         select count(*) from score limit (page-1)*rows,rows
     </select>
 </mapper>

@@ -12,6 +12,6 @@ public interface ScoreService {
     Integer update(Score score);
     Integer del(int id);
     Score getById(int id);
-    List<Score> search(Score score, int page, int rows);
+    List<Score> search(Score score, Integer page, Integer rows);
     Integer countTotal(Score score, Integer page, Integer rows);
 }

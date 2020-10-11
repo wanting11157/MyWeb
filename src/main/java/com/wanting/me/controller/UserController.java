@@ -26,7 +26,7 @@ public class UserController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public ResponseResult login(int stuid,String stupassword){
+    public ResponseResult login(int id,String password){
         ResponseResult res = new ResponseResult();
         //Map result =  studentService.login(stuid,stupassword);
         //res.setData(result);
@@ -34,12 +34,12 @@ public class UserController {
     }
 
 
-    @RequestMapping("/register")
+    @RequestMapping("/add")
     @ResponseBody
     public ResponseResult add(User user){
         ResponseResult result = new ResponseResult();
         Integer add = userService.add(user);
-        if(add == null || add < 1){
+        if(add == null || add.intValue() < 1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);
         }else {
@@ -54,7 +54,7 @@ public class UserController {
     public ResponseResult update(User user){
         ResponseResult result = new ResponseResult();
         Integer add = userService.update(user);
-        if(add == null || add < 1){
+        if(add == null || add.intValue() < 1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);
         }else {
@@ -66,7 +66,7 @@ public class UserController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(Integer id){
+    public ResponseResult getById(int id){
         ResponseResult result = new ResponseResult();
         User user = userService.getById(id);
         if(user == null){
@@ -81,10 +81,10 @@ public class UserController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(User user,Integer page ,Integer rows){
+    public ResponsePage search(User user,int page ,int rows){
         ResponsePage result = new ResponsePage();
         List<User> users = userService.search(user, page, rows);
-        if(users == null || users.size() < 1){
+        if(users.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
         }else   {
@@ -92,9 +92,9 @@ public class UserController {
             result.setPage(page);
             result.setRows(rows);
 
-            Integer tottal = userService.countTotal( user, page , rows);
+            Integer total = userService.countTotal( user, page , rows);
 
-            result.setTotal(tottal);
+            result.setTotal(total);
         }
         return result;
 
@@ -105,7 +105,7 @@ public class UserController {
 
         ResponseResult result = new ResponseResult();
         Integer del = userService.del(id);
-        if(del == null){
+        if(del == null||del.intValue()<1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);
         }else {

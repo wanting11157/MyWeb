@@ -3,16 +3,16 @@
 <mapper namespace="com.wanting.me.mapper.CourseMapper">
    <insert id="add" parameterType="Course">
        INSERT INTO course
-        (name, teacher_id, teacher_name, college, team, create_time, update_time, remark)
+        (name, teacher_id, teacher_name, college, team, create_time, remark)
         VALUES
-        (#{name}, #{teacherId}, #{teacherName}, #{college}, #{team}, #{createTime}, #{updateTime}, #{remark})
+        (#{name}, #{teacherId}, #{teacherName}, #{college}, #{team}, #{createTime}, #{remark})
    </insert>
 
     <delete id="del" parameterType="int">
       delete from course where id=#{id}
     </delete>
 
-    <update id="update" parameterType="int">
+    <update id="update" parameterType="Course">
         UPDATE course SET
         name = #{name}
         teacher_id = #{teacherId}
@@ -28,12 +28,12 @@
     <select id="getById" parameterType="int" resultType="Course">
         select  * from course where id=#{id}
     </select>
-    <select id="search" >
+    <select id="search" parameterType="ResponsePage" resultType="List">
         select  * from course
-         limit page,rows
+         limit (page-1)*rows,rows
     </select>
 
-    <select id="countTotal" resultType="int">
-         select count(*) from course limit page,rows
+    <select id="countTotal" parameterType="ResponsePage" resultType="Integer">
+         select count(*) from course limit (page-1)*rows,rows
     </select>
 </mapper>

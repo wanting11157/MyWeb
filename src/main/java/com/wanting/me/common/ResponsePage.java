@@ -1,8 +1,9 @@
 package com.wanting.me.common;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ResponsePage extends ResponseResult{
+public class ResponsePage extends ResponseResult implements Serializable {
     private List<Object> listData;
     //现在第几页
     private Integer page;

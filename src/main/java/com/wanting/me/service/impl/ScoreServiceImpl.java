@@ -56,7 +56,7 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<Score> search(Score score, int page, int rows) {
+    public List<Score> search(Score score, Integer page, Integer rows) {
         List<Score> scores = scoreMapper.search(score, page, rows);
         return scores;
     }

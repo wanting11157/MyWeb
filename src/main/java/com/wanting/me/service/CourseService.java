@@ -13,5 +13,5 @@ public interface CourseService {
     Integer del(int id);
     Course getById(int id);
     List<Course> search(Course course, int page, int rows);
-    Integer countTotal(Course course, Integer page, Integer rows);
+    int countTotal(Course course, int page, int rows);
 }

@@ -4,16 +4,16 @@
 
    <insert id="add" parameterType="User">
        INSERT INTO user
-        (name, major, haoma, sex, college, password, update_time, create_time, remark)
+        (name, major, haoma, sex, college, password, create_time, remark)
         VALUES
-        ( #{name}, #{major}, #{haoma}, #{sex}, #{college}, #{password}, #{updateTime}, #{createTime}, #{remark})
+        ( #{name}, #{major}, #{haoma}, #{sex}, #{college}, #{password}, #{createTime}, #{remark})
    </insert>
 
-    <delete id="del" parameterType="int">
+    <delete id="del" parameterType="Integer">
       delete from user where id=#{id}
     </delete>
 
-    <update id="update" parameterType="int">
+    <update id="update" parameterType="User">
         UPDATE user SET
         name = #{name}
         major = #{major}
@@ -27,16 +27,16 @@
         id=#{id}
     </update>
 
-    <select id="getById" parameterType="int" resultType="User">
+    <select id="getById" parameterType="Integer" resultType="User">
         select  * from user where id=#{id}
 
     </select>
-    <select id="search" >
+    <select id="search" parameterType="ResponsePage" resultType="List">
         select  * from user
-         limit page,rows
+         limit (page-1)*rows,rows
     </select>
 
-    <select id="countTotal" resultType="int">
-         select  count(*) from user limit page,rows
+    <select id="countTotal" parameterType="ResponsePage" resultType="Integer">
+      select  count(*) from user limit (page-1)*rows,rows
     </select>
 </mapper>

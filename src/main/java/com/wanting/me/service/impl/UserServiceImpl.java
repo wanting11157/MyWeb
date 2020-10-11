@@ -4,9 +4,11 @@ import com.wanting.me.entity.User;
 import com.wanting.me.mapper.UserMapper;
 import com.wanting.me.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
 
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> search(User user, int page, int rows) {
+    public List<User> search(User user, Integer page, Integer rows) {
         List<User> users = userMapper.search(user, page, rows);
         return users;
     }
