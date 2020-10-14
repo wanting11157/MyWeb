@@ -15,10 +15,10 @@
 
     <update id="update" parameterType="Score">
         UPDATE score SET
-        course_id = #{courseId}
-        score = #{score}
-        student_id = #{studentId}
-        update_time = #{updateTime}
+        course_id = #{courseId},
+        score = #{score},
+        student_id = #{studentId},
+        update_time = #{updateTime},
         remark = #{remark}
         where
         id=#{id}
@@ -27,12 +27,12 @@
     <select id="getById" parameterType="int" resultType="Score">
         select  * from score where id=#{id}
     </select>
-    <select id="search" parameterType="ResponsePage" resultType="List">
+    <select id="search"  resultType="List">
         select  * from score
-         limit (page-1)*rows,rows
+         limit #{start},#{rows}
     </select>
 
-    <select id="countTotal" parameterType="ResponsePage" resultType="Integer">
-         select count(*) from score limit (page-1)*rows,rows
+    <select id="countTotal"  resultType="Integer">
+         select count(*) from score limit #{start},#{rows}
     </select>
 </mapper>

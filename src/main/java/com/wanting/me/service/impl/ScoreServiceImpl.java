@@ -1,5 +1,6 @@
 package com.wanting.me.service.impl;
 
+import com.wanting.me.common.ResponsePage;
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
 import com.wanting.me.mapper.CourseMapper;
@@ -20,7 +21,7 @@ public class ScoreServiceImpl implements ScoreService {
 
 
     @Override
-    public Integer add(Score score) {
+    public Integer add(Score score)throws Exception {
 
 
         // nn
@@ -36,34 +37,36 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Integer update(Score score) {
+    public Integer update(Score score)throws Exception {
         Integer update = scoreMapper.update(score);
 
         return update;
     }
 
     @Override
-    public Integer del(int id) {
+    public Integer del(int id)throws Exception {
         Integer del = scoreMapper.del(id);
         // todo .....
         return del;
     }
 
     @Override
-    public Score getById(int id) {
+    public Score getById(int id)throws Exception {
         Score score = scoreMapper.getById(id);
         return score;
     }
 
     @Override
-    public List<Score> search(Score score, Integer page, Integer rows) {
-        List<Score> scores = scoreMapper.search(score, page, rows);
+    public List<Score> search(Score score, Integer page, Integer rows)throws Exception {
+        int start = ResponsePage.initStart(page,rows);
+        List<Score> scores = scoreMapper.search(score, start, rows);
         return scores;
     }
 
     @Override
-    public Integer countTotal(Score score, Integer page, Integer rows) {
-        Integer total = scoreMapper.countTotal(score, page, rows);
+    public Integer countTotal(Score score, Integer page, Integer rows)throws Exception {
+        int start = ResponsePage.initStart(page,rows);
+        Integer total = scoreMapper.countTotal(score, start, rows);
         return total;
     }
 }

@@ -1,6 +1,7 @@
 package com.wanting.me.controller;
 
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -26,17 +28,27 @@ public class UserController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public ResponseResult login(int id,String password){
+    public ResponseResult login(String username,String password) throws Exception{
         ResponseResult res = new ResponseResult();
-        //Map result =  studentService.login(stuid,stupassword);
-        //res.setData(result);
+        /**
+         * 登录成功返回 名字
+         * 失败 返回 空 null
+         */
+        String name = userService.login(username,password);
+        if( name == null ){
+            res.setCode(WebResponse.ERROR);
+            res.setMsg(WebResponse.MSG_ERROR);
+        }else {
+            res.setData(name);
+        }
         return res;
     }
 
 
     @RequestMapping("/add")
     @ResponseBody
-    public ResponseResult add(User user){
+    public ResponseResult add(User user ) throws Exception{
+
         ResponseResult result = new ResponseResult();
         Integer add = userService.add(user);
         if(add == null || add.intValue() < 1){
@@ -51,7 +63,7 @@ public class UserController {
 
     @RequestMapping("/update")
     @ResponseBody
-    public ResponseResult update(User user){
+    public ResponseResult update(User user) throws Exception{
         ResponseResult result = new ResponseResult();
         Integer add = userService.update(user);
         if(add == null || add.intValue() < 1){
@@ -66,7 +78,7 @@ public class UserController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(int id){
+    public ResponseResult getById(int id) throws Exception{
         ResponseResult result = new ResponseResult();
         User user = userService.getById(id);
         if(user == null){
@@ -81,13 +93,23 @@ public class UserController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(User user,int page ,int rows){
+    public ResponsePage search(User user,Integer page ,Integer rows) throws Exception{
         ResponsePage result = new ResponsePage();
         List<User> users = userService.search(user, page, rows);
         if(users.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
         }else   {
+
+//            User $= new User();
+//
+//            $.getName();
+//            //$(".fjaewf")
+//            $.setName("zhc");
+//
+//            $.getName();
+
+
             result.setData(users);
             result.setPage(page);
             result.setRows(rows);
@@ -101,7 +123,7 @@ public class UserController {
     }
     @RequestMapping("/del")
     @ResponseBody
-    public ResponseResult del(Integer id){
+    public ResponseResult del(Integer id) throws Exception{
 
         ResponseResult result = new ResponseResult();
         Integer del = userService.del(id);

@@ -2,18 +2,18 @@ package com.wanting.me.mapper;
 
 
 import com.wanting.me.entity.Course;
-import com.wanting.me.entity.Score;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 
 
 @Mapper
 public interface CourseMapper {
-    Integer add(Course course);
-    Integer update(Course course);
-    Integer del(int id);
-    Course getById(int id);
-    List<Course> search(Course course, int page, int rows);
-    Integer countTotal(Course course, int page, int rows);
+    Integer add(Course course)throws SQLException;
+    Integer update(Course course)throws SQLException;
+    Integer del(int id)throws SQLException;
+    Course getById(int id)throws SQLException;
+    List<Course> search(Course course, int start, int rows)throws SQLException;
+    Integer countTotal(Course course, int start, int rows)throws SQLException;
 }

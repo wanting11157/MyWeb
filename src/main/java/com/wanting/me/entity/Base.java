@@ -3,24 +3,24 @@ package com.wanting.me.entity;
 import java.sql.Date;
 
 public class Base {
-    private Date update_time;
-    private Date create_time;
+    private Date updateTime;
+    private Date createTime;
     private String remark;
 
-    public Date getUpdate_time() {
-        return update_time;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public String getRemark() {
@@ -34,8 +34,8 @@ public class Base {
     @Override
     public String toString() {
         return "Base{" +
-                "update_time=" + update_time +
-                ", create_time=" + create_time +
+                "updateTime=" + updateTime +
+                ", createTime=" + createTime +
                 ", remark='" + remark + '\'' +
                 '}';
     }

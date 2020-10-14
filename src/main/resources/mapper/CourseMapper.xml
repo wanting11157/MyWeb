@@ -14,12 +14,12 @@
 
     <update id="update" parameterType="Course">
         UPDATE course SET
-        name = #{name}
-        teacher_id = #{teacherId}
-        teacher_name = #{teacherName}
-        college = #{college}
-        team = #{team}
-        update_time = #{updateTime}
+        name = #{name},
+        teacher_id = #{teacherId},
+        teacher_name = #{teacherName},
+        college = #{college},
+        team = #{team},
+        update_time = #{updateTime},
         remark = #{remark}
         where
         id=#{id}
@@ -28,12 +28,12 @@
     <select id="getById" parameterType="int" resultType="Course">
         select  * from course where id=#{id}
     </select>
-    <select id="search" parameterType="ResponsePage" resultType="List">
+    <select id="search" resultType="List">
         select  * from course
-         limit (page-1)*rows,rows
+       limit #{start},#{rows}
     </select>
 
-    <select id="countTotal" parameterType="ResponsePage" resultType="Integer">
-         select count(*) from course limit (page-1)*rows,rows
+    <select id="countTotal"  resultType="Integer">
+         select count(*) from course limit #{start},#{rows}
     </select>
 </mapper>

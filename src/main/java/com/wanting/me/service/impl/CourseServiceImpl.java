@@ -1,11 +1,9 @@
 package com.wanting.me.service.impl;
 
+import com.wanting.me.common.ResponsePage;
 import com.wanting.me.entity.Course;
-import com.wanting.me.entity.User;
 import com.wanting.me.mapper.CourseMapper;
-import com.wanting.me.mapper.UserMapper;
 import com.wanting.me.service.CourseService;
-import com.wanting.me.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +18,7 @@ public class CourseServiceImpl implements CourseService {
 
 
     @Override
-    public Integer add(Course course) {
+    public Integer add(Course course) throws Exception{
 
 
         // nn
@@ -36,34 +34,36 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Integer update(Course course) {
+    public Integer update(Course course)throws Exception {
         Integer update = courseMapper.update(course);
 
         return update;
     }
 
     @Override
-    public Integer del(int id) {
+    public Integer del(int id)throws Exception {
         Integer del = courseMapper.del(id);
         // todo .....
         return del;
     }
 
     @Override
-    public Course getById(int id) {
+    public Course getById(int id) throws Exception{
         Course course = courseMapper.getById(id);
         return course;
     }
 
     @Override
-    public List<Course> search(Course course, int page, int rows) {
-        List<Course> courses = courseMapper.search(course, page, rows);
+    public List<Course> search(Course course, Integer page, Integer rows) throws Exception{
+        int start = ResponsePage.initStart(page,rows);
+        List<Course> courses = courseMapper.search(course, start, rows);
         return courses;
     }
 
     @Override
-    public Integer countTotal(Course course, Integer page, Integer rows) {
-        Integer total = courseMapper.countTotal(course, page, rows);
+    public Integer countTotal(Course course, Integer page, Integer rows)throws Exception {
+        int start = ResponsePage.initStart(page,rows);
+        Integer total = courseMapper.countTotal(course, start, rows);
         return total;
     }
 }

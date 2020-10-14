@@ -12,6 +12,18 @@ public class ResponsePage extends ResponseResult implements Serializable {
     //一共有多少行
     private Integer total;
 
+    public static int initStart(Integer page,Integer rows){
+        if(page == null){
+            page = 1;
+        }
+        if(rows == null){
+            rows = 30;
+        }
+
+        return (page - 1)*rows;
+
+    }
+
     public List<Object> getListData() {
         return listData;
     }

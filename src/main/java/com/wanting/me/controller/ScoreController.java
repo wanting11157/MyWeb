@@ -4,8 +4,8 @@ package com.wanting.me.controller;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
-import com.wanting.me.entity.Course;
-import com.wanting.me.service.CourseService;
+import com.wanting.me.entity.Score;
+import com.wanting.me.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ScoreController {
 
     @Autowired
-    private CourseService courseService;
+    private ScoreService scoreService;
 
 
 //    @RequestMapping("/login")
@@ -34,24 +34,27 @@ public class ScoreController {
 
     @RequestMapping("/add")
     @ResponseBody
-    public ResponseResult add(Course course){
+    public ResponseResult add(Score score)throws Exception{
         ResponseResult result = new ResponseResult();
-        Integer add = courseService.add(course);
-        if(add == null || add < 1){
-            result.setCode(WebResponse.ERROR);
-            result.setMsg(WebResponse.MSG_ERROR);
-        }else {
-            result.setMsg("注册成功");
-        }
+
+            Integer add = scoreService.add(score);
+            if(add == null || add < 1){
+                result.setCode(WebResponse.ERROR);
+                result.setMsg(WebResponse.MSG_ERROR);
+            }else {
+                result.setMsg("注册成功");
+            }
+
+
         return result;
 
     }
 
     @RequestMapping("/update")
     @ResponseBody
-    public ResponseResult update(Course course){
+    public ResponseResult update(Score score)throws Exception{
         ResponseResult result = new ResponseResult();
-        Integer add = courseService.update(course);
+        Integer add = scoreService.update(score);
         if(add == null || add < 1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);
@@ -64,14 +67,14 @@ public class ScoreController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(int id){
+    public ResponseResult getById(int id) throws Exception{
         ResponseResult result = new ResponseResult();
-        Course course = courseService.getById(id);
-        if(course == null){
+        Score score = scoreService.getById(id);
+        if(score == null){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
         }else {
-            result.setData(course);
+            result.setData(score);
         }
         return result;
 
@@ -79,18 +82,18 @@ public class ScoreController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(Course course,int page ,int rows){
+    public ResponsePage search(Score score,int page ,int rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<Course> courses = courseService.search(course, page, rows);
-        if(courses == null || courses.size() < 1){
+        List<Score> scores = scoreService.search(score, page, rows);
+        if(scores == null || scores.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
         }else   {
-            result.setData(courses);
+            result.setData(scores);
             result.setPage(page);
             result.setRows(rows);
 
-            Integer total = courseService.countTotal(course,page,rows);
+            Integer total = scoreService.countTotal(score,page,rows);
 
             result.setTotal(total);
         }
@@ -99,10 +102,10 @@ public class ScoreController {
     }
     @RequestMapping("/del")
     @ResponseBody
-    public ResponseResult del(Integer id){
+    public ResponseResult del(Integer id) throws Exception{
 
         ResponseResult result = new ResponseResult();
-        Integer del = courseService.del(id);
+        Integer del = scoreService.del(id);
         if(del == null|| del < 1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);

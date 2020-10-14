@@ -5,9 +5,7 @@ import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
 import com.wanting.me.entity.Course;
-import com.wanting.me.entity.User;
 import com.wanting.me.service.CourseService;
-import com.wanting.me.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,26 +22,16 @@ public class CourseController {
     private CourseService courseService;
 
 
-//    @RequestMapping("/login")
-//    @ResponseBody
-//    public ResponseResult login(int stuid,String stupassword){
-//        ResponseResult res = new ResponseResult();
-        //Map result =  studentService.login(stuid,stupassword);
-        //res.setData(result);
-//        return res;
-//    }
-
-
     @RequestMapping("/add")
     @ResponseBody
-    public ResponseResult add(Course course){
+    public ResponseResult add(Course course) throws Exception{
         ResponseResult result = new ResponseResult();
         Integer add = courseService.add(course);
         if(add == null || add < 1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);
         }else {
-            result.setMsg("注册成功");
+            result.setMsg("增加课程成功");
         }
         return result;
 
@@ -51,7 +39,7 @@ public class CourseController {
 
     @RequestMapping("/update")
     @ResponseBody
-    public ResponseResult update(Course course){
+    public ResponseResult update(Course course) throws Exception{
         ResponseResult result = new ResponseResult();
         Integer add = courseService.update(course);
         if(add == null || add < 1){
@@ -66,7 +54,7 @@ public class CourseController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(int id){
+    public ResponseResult getById(int id) throws Exception{
         ResponseResult result = new ResponseResult();
         Course course = courseService.getById(id);
         if(course == null){
@@ -81,7 +69,7 @@ public class CourseController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(Course course,int page ,int rows){
+    public ResponsePage search(Course course,int page ,int rows) throws Exception{
         ResponsePage result = new ResponsePage();
         List<Course> courses = courseService.search(course, page, rows);
         if(courses == null || courses.size() < 1){
@@ -101,7 +89,7 @@ public class CourseController {
     }
     @RequestMapping("/del")
     @ResponseBody
-    public ResponseResult del(Integer id){
+    public ResponseResult del(Integer id) throws Exception{
 
         ResponseResult result = new ResponseResult();
         Integer del = courseService.del(id);

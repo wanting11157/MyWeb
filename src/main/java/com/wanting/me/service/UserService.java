@@ -7,10 +7,12 @@ import java.util.List;
 
 
 public interface UserService {
-    Integer add(User user);
-    Integer update(User user);
-    Integer del(int id);
-    User getById(int id);
-    List<User> search(User user, Integer page, Integer rows);
-    Integer countTotal(User user, Integer page, Integer rows);
+    Integer add(User user)throws Exception;
+    Integer update(User user)throws Exception;
+    Integer del(int id)throws Exception;
+    User getById(int id)throws Exception;
+    List<User> search(User user, Integer page, Integer rows)throws Exception;
+    Integer countTotal(User user, Integer page, Integer rows)throws Exception;
+
+    String login(String username, String password)throws Exception;
 }

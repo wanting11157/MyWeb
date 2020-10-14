@@ -8,10 +8,10 @@ import java.util.List;
 
 
 public interface CourseService {
-    Integer add(Course course);
-    Integer update(Course course);
-    Integer del(int id);
-    Course getById(int id);
-    List<Course> search(Course course, int page, int rows);
-    int countTotal(Course course, int page, int rows);
+    Integer add(Course course)throws Exception;
+    Integer update(Course course)throws Exception;
+    Integer del(int id)throws Exception;
+    Course getById(int id)throws Exception;
+    List<Course> search(Course course, Integer page, Integer rows)throws Exception;
+    Integer countTotal(Course course, Integer page, Integer rows)throws Exception;
 }

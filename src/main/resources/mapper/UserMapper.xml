@@ -15,13 +15,13 @@
 
     <update id="update" parameterType="User">
         UPDATE user SET
-        name = #{name}
-        major = #{major}
-        haoma = #{haoma}
-        sex = #{sex}
-        college = #{college}
-        password = #{password}
-        update_time = #{updateTime}
+        name = #{name},
+        major = #{major},
+        haoma = #{haoma},
+        sex = #{sex},
+        college = #{college},
+        password = #{password},
+        update_time = #{updateTime},
         remark = #{remark}
         where
         id=#{id}
@@ -31,12 +31,12 @@
         select  * from user where id=#{id}
 
     </select>
-    <select id="search" parameterType="ResponsePage" resultType="List">
+    <select id="search" resultType="User">
         select  * from user
-         limit (page-1)*rows,rows
+
     </select>
 
-    <select id="countTotal" parameterType="ResponsePage" resultType="Integer">
-      select  count(*) from user limit (page-1)*rows,rows
+    <select id="countTotal" resultType="Integer">
+      select  count(*) from user
     </select>
 </mapper>
