@@ -54,9 +54,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> search(Course course, Integer page, Integer rows) throws Exception{
-        int start = ResponsePage.initStart(page,rows);
-        List<Course> courses = courseMapper.search(course, start, rows);
+    public List<Course> search(Course course) throws Exception{
+//        int start = ResponsePage.initStart(page,rows);
+        List<Course> courses = courseMapper.search(course);
         return courses;
     }
 

@@ -15,21 +15,20 @@
 
     <update id="update" parameterType="Score">
         UPDATE score SET
-        course_id = #{courseId},
         score = #{score},
-        student_id = #{studentId},
         update_time = #{updateTime},
         remark = #{remark}
         where
-        id=#{id}
+        course_id = #{courseId} and
+        student_id = #{studentId}
     </update>
 
-    <select id="getById" parameterType="int" resultType="Score">
-        select  * from score where id=#{id}
+    <select id="getById" parameterType="Integer" resultType="Score">
+        select  * from score where course_id=#{courseId} and student_id=#{studentId}
     </select>
-    <select id="search"  resultType="List">
+    <select id="search"  resultType="Score">
         select  * from score
-         limit #{start},#{rows}
+
     </select>
 
     <select id="countTotal"  resultType="Integer">

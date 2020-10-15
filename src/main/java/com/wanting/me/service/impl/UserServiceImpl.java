@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(int id) throws Exception {
+    public User getById(Integer id) throws Exception {
         User user = userMapper.getById(id);
         return user;
     }

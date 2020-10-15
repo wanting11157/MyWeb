@@ -78,7 +78,7 @@ public class UserController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(int id) throws Exception{
+    public ResponseResult getById(Integer id) throws Exception{
         ResponseResult result = new ResponseResult();
         User user = userService.getById(id);
         if(user == null){

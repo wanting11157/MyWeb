@@ -71,7 +71,7 @@ public class CourseController {
     @ResponseBody
     public ResponsePage search(Course course,int page ,int rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<Course> courses = courseService.search(course, page, rows);
+        List<Course> courses = courseService.search(course);
         if(courses == null || courses.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);

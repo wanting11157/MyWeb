@@ -39,4 +39,8 @@
     <select id="countTotal" resultType="Integer">
       select  count(*) from user
     </select>
+
+    <select id="getByHaoMa" parameterType="String" resultType="User">
+      select * from user where haoma=#{username}
+    </select>
 </mapper>

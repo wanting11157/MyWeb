@@ -28,9 +28,9 @@
     <select id="getById" parameterType="int" resultType="Course">
         select  * from course where id=#{id}
     </select>
-    <select id="search" resultType="List">
+    <select id="search" resultType="Course">
         select  * from course
-       limit #{start},#{rows}
+
     </select>
 
     <select id="countTotal"  resultType="Integer">

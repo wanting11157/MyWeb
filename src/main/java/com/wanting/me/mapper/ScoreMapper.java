@@ -13,7 +13,7 @@ public interface ScoreMapper {
     Integer add(Score score)throws SQLException;
     Integer update(Score score)throws SQLException;
     Integer del(int id)throws SQLException;
-    Score getById(int id)throws SQLException;
-    List<Score> search(Score score, int start, int rows)throws SQLException;
+    Score getById(Integer courseId,Integer studentId)throws SQLException;
+    List<Score> search(Score score)throws SQLException;
     Integer countTotal(Score score, Integer start, Integer rows)throws SQLException;
 }

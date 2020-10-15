@@ -67,9 +67,9 @@ public class ScoreController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(int id) throws Exception{
+    public ResponseResult getById(Integer courseId,Integer studentId) throws Exception{
         ResponseResult result = new ResponseResult();
-        Score score = scoreService.getById(id);
+        Score score = scoreService.getById(courseId,studentId);
         if(score == null){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
@@ -82,20 +82,20 @@ public class ScoreController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(Score score,int page ,int rows) throws Exception{
+    public ResponsePage search(Score score) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<Score> scores = scoreService.search(score, page, rows);
+        List<Score> scores = scoreService.search(score);
         if(scores == null || scores.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
         }else   {
             result.setData(scores);
-            result.setPage(page);
-            result.setRows(rows);
+//            result.setPage(page);
+//            result.setRows(rows);
+//
+//            Integer total = scoreService.countTotal(score,page,rows);
 
-            Integer total = scoreService.countTotal(score,page,rows);
-
-            result.setTotal(total);
+//            result.setTotal(total);
         }
         return result;
 

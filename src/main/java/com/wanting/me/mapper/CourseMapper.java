@@ -14,6 +14,6 @@ public interface CourseMapper {
     Integer update(Course course)throws SQLException;
     Integer del(int id)throws SQLException;
     Course getById(int id)throws SQLException;
-    List<Course> search(Course course, int start, int rows)throws SQLException;
+    List<Course> search(Course course)throws SQLException;
     Integer countTotal(Course course, int start, int rows)throws SQLException;
 }

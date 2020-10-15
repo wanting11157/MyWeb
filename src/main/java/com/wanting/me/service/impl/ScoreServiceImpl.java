@@ -51,15 +51,15 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Score getById(int id)throws Exception {
-        Score score = scoreMapper.getById(id);
+    public Score getById(Integer courseId,Integer studentId)throws Exception {
+        Score score = scoreMapper.getById(courseId,studentId);
         return score;
     }
 
     @Override
-    public List<Score> search(Score score, Integer page, Integer rows)throws Exception {
-        int start = ResponsePage.initStart(page,rows);
-        List<Score> scores = scoreMapper.search(score, start, rows);
+    public List<Score> search(Score score)throws Exception {
+//        int start = ResponsePage.initStart(page,rows);
+        List<Score> scores = scoreMapper.search(score);
         return scores;
     }
 
