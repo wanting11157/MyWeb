@@ -54,11 +54,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> search(User user, Integer page, Integer rows) throws Exception {
+    public List<User> search(User user) throws Exception {
 
 
-        int start = ResponsePage.initStart(page,rows);
-        List<User> users = userMapper.search(user, start, rows);
+//        int start = ResponsePage.initStart(page,rows);
+        List<User> users = userMapper.search(user);
         return users;
     }
 

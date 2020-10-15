@@ -93,9 +93,9 @@ public class UserController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(User user,Integer page ,Integer rows) throws Exception{
+    public ResponsePage search(User user,int page ,int rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<User> users = userService.search(user, page, rows);
+        List<User> users = userService.search(user);
         if(users.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);

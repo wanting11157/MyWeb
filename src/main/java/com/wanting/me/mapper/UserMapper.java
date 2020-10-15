@@ -14,7 +14,7 @@ public interface UserMapper {
     Integer update(User user)throws SQLException;
     Integer del(int id)throws SQLException;
     User getById(Integer id)throws SQLException;
-    List<User> search(User user, int start, int rows)throws SQLException;
+    List<User> search(User user)throws SQLException;
     Integer countTotal(User user, Integer start, Integer rows)throws SQLException;
 
 
