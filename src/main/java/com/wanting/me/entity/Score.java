@@ -2,40 +2,40 @@ package com.wanting.me.entity;
 
 public class Score extends Base{
 
-    private int id;
-    private int courseId;
-    private int score;
-    private int studentId;
+    private Integer id;
+    private Integer courseId;
+    private Integer score;
+    private Integer studentId;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getCourseId() {
+    public Integer getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(Integer courseId) {
         this.courseId = courseId;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
-    public int getStudentId() {
+    public Integer getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(Integer studentId) {
         this.studentId = studentId;
     }
 

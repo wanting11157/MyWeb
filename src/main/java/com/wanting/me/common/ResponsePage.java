@@ -12,7 +12,7 @@ public class ResponsePage extends ResponseResult implements Serializable {
     //一共有多少行
     private Integer total;
 
-    public static int initStart(Integer page,Integer rows){
+    public static Integer initStart(Integer page,Integer rows){
         if(page == null){
             page = 1;
         }

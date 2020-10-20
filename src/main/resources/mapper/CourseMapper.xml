@@ -5,7 +5,7 @@
        INSERT INTO course
         (name, teacher_id, teacher_name, college, team, create_time, remark)
         VALUES
-        (#{name}, #{teacherId}, #{teacherName}, #{college}, #{team}, #{createTime}, #{remark})
+        (#{name}, #{teacherId}, #{teacherName}, #{college}, #{team}, now(), #{remark})
    </insert>
 
     <delete id="del" parameterType="int">
@@ -19,7 +19,7 @@
         teacher_name = #{teacherName},
         college = #{college},
         team = #{team},
-        update_time = #{updateTime},
+        update_time = now(),
         remark = #{remark}
         where
         id=#{id}
@@ -29,11 +29,11 @@
         select  * from course where id=#{id}
     </select>
     <select id="search" resultType="Course">
-        select  * from course
+        select  * from course limit #{start},#{rows}
 
     </select>
 
     <select id="countTotal"  resultType="Integer">
-         select count(*) from course limit #{start},#{rows}
+         select count(*) from course 
     </select>
 </mapper>

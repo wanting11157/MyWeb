@@ -4,6 +4,7 @@ import com.wanting.me.common.ResponsePage;
 import com.wanting.me.entity.User;
 import com.wanting.me.mapper.UserMapper;
 import com.wanting.me.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,6 @@ public class UserServiceImpl implements UserService {
 
         //
 
-
-
-
         return add;
     }
 
@@ -42,9 +40,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer del(int id) throws Exception {
+
+
         Integer del = userMapper.del(id);
         // todo .....
         return del;
+    }
+
+    @Override
+    public Integer dels(Integer[] ids) throws Exception {
+        return userMapper.dels(ids);
     }
 
     @Override
@@ -54,18 +59,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> search(User user) throws Exception {
+    public List<User> search(Integer page, Integer rows) throws Exception {
 
 
-//        int start = ResponsePage.initStart(page,rows);
-        List<User> users = userMapper.search(user);
+        Integer start = ResponsePage.initStart(page,rows);
+        List<User> users = userMapper.search(start,rows);
         return users;
     }
 
     @Override
-    public Integer countTotal(User user, Integer page, Integer rows) throws Exception {
-        int start = ResponsePage.initStart(page,rows);
-        Integer total = userMapper.countTotal(user, start, rows);
+    public Integer countTotal() throws Exception {
+//        int start = ResponsePage.initStart(page,rows);
+        Integer total = userMapper.countTotal();
         return total;
     }
 

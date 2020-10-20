@@ -3,20 +3,28 @@ package com.wanting.me.entity;
 
 public class User extends Base{
 
-      private int id;
+      private Integer id;
       private String name;
       private String major;
       private String haoma;
-      private int sex;
+      private Integer sex;
       private String college;
       private String password;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public Integer getSex() {
+        return sex;
     }
 
     public String getName() {
@@ -43,13 +51,9 @@ public class User extends Base{
         this.haoma = haoma;
     }
 
-    public int getSex() {
-        return sex;
-    }
 
-    public void setSex(int sex) {
-        this.sex = sex;
-    }
+
+
 
     public String getCollege() {
         return college;

@@ -44,22 +44,36 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Integer del(int id)throws Exception {
-        Integer del = scoreMapper.del(id);
-        // todo .....
+    public Integer save(Score score) throws Exception {
+
+        if(score != null){
+            if(score.getId() == null){
+                return  this.add(score);
+            }else {
+                return this.update(score);
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public Integer del(Score score)throws Exception {
+        Integer del = scoreMapper.del(score);
+
         return del;
     }
 
     @Override
-    public Score getById(Integer courseId,Integer studentId)throws Exception {
-        Score score = scoreMapper.getById(courseId,studentId);
+    public Score getById(Integer id)throws Exception {
+        Score score = scoreMapper.getById(id);
         return score;
     }
 
     @Override
-    public List<Score> search(Score score)throws Exception {
-//        int start = ResponsePage.initStart(page,rows);
-        List<Score> scores = scoreMapper.search(score);
+    public List<Score> search(Score score, Integer page, Integer rows)throws Exception {
+        int start = ResponsePage.initStart(page,rows);
+        List<Score> scores = scoreMapper.search(score, start, rows);
         return scores;
     }
 

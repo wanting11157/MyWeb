@@ -3,6 +3,7 @@ package com.wanting.me.service.impl;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.entity.Course;
 import com.wanting.me.mapper.CourseMapper;
+import com.wanting.me.mapper.ScoreMapper;
 import com.wanting.me.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private CourseMapper courseMapper;
+    @Autowired
+    private ScoreMapper scoreMapper;
 
 
     @Override
@@ -42,6 +45,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Integer del(int id)throws Exception {
+
+        Course course = courseMapper.getById(id);
+
         Integer del = courseMapper.del(id);
         // todo .....
         return del;
@@ -54,16 +60,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> search(Course course) throws Exception{
-//        int start = ResponsePage.initStart(page,rows);
-        List<Course> courses = courseMapper.search(course);
+    public List<Course> search(Integer page ,Integer rows) throws Exception{
+        Integer start = ResponsePage.initStart(page,rows);
+        List<Course> courses = courseMapper.search(start,rows);
         return courses;
     }
 
     @Override
-    public Integer countTotal(Course course, Integer page, Integer rows)throws Exception {
-        int start = ResponsePage.initStart(page,rows);
-        Integer total = courseMapper.countTotal(course, start, rows);
+    public Integer countTotal()throws Exception {
+//        int start = ResponsePage.initStart(page,rows);
+        Integer total = courseMapper.countTotal();
         return total;
     }
 }

@@ -65,11 +65,27 @@ public class ScoreController {
 
     }
 
+    @RequestMapping("/save")
+    @ResponseBody
+    public ResponseResult save(Score score)throws Exception{
+        ResponseResult result = new ResponseResult();
+        Integer save = scoreService.save(score);
+        if(save == null || save < 1){
+            result.setCode(WebResponse.ERROR);
+            result.setMsg(WebResponse.MSG_ERROR);
+        }else {
+            result.setMsg("保存成功");
+        }
+        return result;
+
+    }
+
+
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(Integer courseId,Integer studentId) throws Exception{
+    public ResponseResult getById(Integer id) throws Exception{
         ResponseResult result = new ResponseResult();
-        Score score = scoreService.getById(courseId,studentId);
+        Score score = scoreService.getById(id);
         if(score == null){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
@@ -82,9 +98,9 @@ public class ScoreController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(Score score) throws Exception{
+    public ResponsePage search(Score score, Integer page, Integer rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<Score> scores = scoreService.search(score);
+        List<Score> scores = scoreService.search(score,page,rows);
         if(scores == null || scores.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
@@ -102,10 +118,10 @@ public class ScoreController {
     }
     @RequestMapping("/del")
     @ResponseBody
-    public ResponseResult del(Integer id) throws Exception{
+    public ResponseResult del(Score score) throws Exception{
 
         ResponseResult result = new ResponseResult();
-        Integer del = scoreService.del(id);
+        Integer del = scoreService.del(score);
         if(del == null|| del < 1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);

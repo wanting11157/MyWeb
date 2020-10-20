@@ -1,6 +1,7 @@
 package com.wanting.me.common;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public class ResponseResult implements Serializable {
     private Object data;
 
     public Integer getCode() {
+
         if(this.code == null){
             this.code = WebResponse.SUCCESS;
         }

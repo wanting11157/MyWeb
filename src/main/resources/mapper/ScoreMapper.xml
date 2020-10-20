@@ -6,28 +6,42 @@
        INSERT INTO score
         (course_id,score,student_id,create_time,remark)
         VALUES
-        (#{courseId}, #{score}, #{studentId}, #{createTime}, #{remark})
+        (#{courseId}, #{score}, #{studentId}, now(), #{remark})
    </insert>
 
-    <delete id="del" parameterType="int">
-      delete from score where id=#{id}
+    <delete id="del" parameterType="Score">
+      delete from score where 1=1
+      <if test="id!=null and id!='' and id>1">
+          and id=#{id}
+      </if>
+        <if test="courseId!=null and courseId!='' and courseId>1">
+            and course_id=#{courseId}
+        </if>
     </delete>
 
     <update id="update" parameterType="Score">
         UPDATE score SET
         score = #{score},
-        update_time = #{updateTime},
-        remark = #{remark}
-        where
-        course_id = #{courseId} and
+        update_time = now(),
+        remark = #{remark},
+        course_id = #{courseId},
         student_id = #{studentId}
+        where
+        id=#{id}
+        
     </update>
 
     <select id="getById" parameterType="Integer" resultType="Score">
-        select  * from score where course_id=#{courseId} and student_id=#{studentId}
+        select  * from score where id = #{id}
     </select>
-    <select id="search"  resultType="Score">
+    <select id="search"  resultType="Score"  >
         select  * from score
+<!--        <where>-->
+<!--            <if test="courseId != null">course_id = #{courseId}</if>-->
+<!--            <if test="studentId != null">student_id = #{studentId}</if>-->
+<!--            <if test="remark != null">remark like concat('%',#{remark},'%')</if>-->
+<!--        </where>-->
+
 
     </select>
 

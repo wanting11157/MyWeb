@@ -1,25 +1,26 @@
 package com.wanting.me.controller;
 
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.alibaba.fastjson.JSONObject;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
 import com.wanting.me.entity.User;
-
 import com.wanting.me.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-
+@Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    //Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -93,9 +94,9 @@ public class UserController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(User user,int page ,int rows) throws Exception{
+    public ResponsePage search(@RequestParam(required = false) Integer page , Integer rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<User> users = userService.search(user);
+        List<User> users = userService.search(page,rows);
         if(users.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
@@ -111,10 +112,10 @@ public class UserController {
 
 
             result.setData(users);
-            result.setPage(page);
-            result.setRows(rows);
+//            result.setPage(page);
+//            result.setRows(rows);
 
-            Integer total = userService.countTotal( user, page , rows);
+            Integer total = userService.countTotal();
 
             result.setTotal(total);
         }
@@ -127,10 +128,54 @@ public class UserController {
 
         ResponseResult result = new ResponseResult();
         Integer del = userService.del(id);
-        if(del == null||del.intValue()<1){
+        if(del == null||del<1){
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);
         }else {
+            result.setMsg("删除成功");
+        }
+        return result;
+    }
+
+    @RequestMapping("/dels")
+    @ResponseBody
+    public ResponseResult dels( @RequestParam("ids[]") Integer[] ids) throws Exception{
+
+        String idsJSONString = JSONObject.toJSONString(ids);
+        log.info("执行了dels。。。。。ids = " + idsJSONString);
+
+        ResponseResult result = new ResponseResult();
+//        boolean delSuccess = true;
+//        String msg = "";
+//        for(Integer id : ids) {
+//            Integer del = userService.del(id);
+//            if(del<1) {
+//                delSuccess = false;
+//                msg += "id = "+id +" 删除失败";
+//            }
+//        }
+
+        Integer del = userService.dels(ids);
+        if(del == null || del < 1){
+
+            result.setCode(WebResponse.ERROR);
+            result.setMsg(WebResponse.MSG_ERROR);
+            log.error("删除失败");
+
+            log.info("");
+
+            log.warn("");
+
+            log.error("id == null ");
+
+
+            //日志级别
+
+
+        }else {
+            if(del != ids.length){
+                log.warn("有部分id无效");
+            }
             result.setMsg("删除成功");
         }
         return result;

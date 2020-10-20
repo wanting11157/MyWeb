@@ -69,18 +69,18 @@ public class CourseController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(Course course,int page ,int rows) throws Exception{
+    public ResponsePage search(Integer page ,Integer rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<Course> courses = courseService.search(course);
+        List<Course> courses = courseService.search(page,rows);
         if(courses == null || courses.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
         }else   {
             result.setData(courses);
-            result.setPage(page);
-            result.setRows(rows);
+//            result.setPage(page);
+//            result.setRows(rows);
 
-            Integer total = courseService.countTotal(course,page,rows);
+            Integer total = courseService.countTotal();
 
             result.setTotal(total);
         }

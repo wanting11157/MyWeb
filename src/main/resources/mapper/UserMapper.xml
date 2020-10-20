@@ -4,13 +4,22 @@
 
    <insert id="add" parameterType="User">
        INSERT INTO user
-        (name, major, haoma, sex, college, password, create_time, remark)
+        (name, major, haoma, sex, college, password, create_time,remark)
         VALUES
-        ( #{name}, #{major}, #{haoma}, #{sex}, #{college}, #{password}, #{createTime}, #{remark})
+        ( #{name}, #{major}, #{haoma}, #{sex}, #{college}, #{password},now(), #{remark})
    </insert>
 
     <delete id="del" parameterType="Integer">
       delete from user where id=#{id}
+    </delete>
+
+    <delete id="dels" >
+      delete from user where id in
+      <foreach collection="ids" open="(" close=")"  separator="," item="id" >
+          #{id}
+      </foreach>
+
+
     </delete>
 
     <update id="update" parameterType="User">
@@ -21,7 +30,7 @@
         sex = #{sex},
         college = #{college},
         password = #{password},
-        update_time = #{updateTime},
+        update_time = now(),
         remark = #{remark}
         where
         id=#{id}
@@ -32,7 +41,7 @@
 
     </select>
     <select id="search" resultType="User">
-        select  * from user
+        select  * from user limit #{start},#{rows}
 
     </select>
 
