@@ -6,14 +6,16 @@ import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
 import com.wanting.me.entity.Course;
 import com.wanting.me.service.CourseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-
+@Slf4j
 @Controller
 @RequestMapping("/course")
 public class CourseController {
@@ -62,6 +64,7 @@ public class CourseController {
             result.setMsg(WebResponse.MSG_NODATA);
         }else {
             result.setData(course);
+           
         }
         return result;
 
@@ -98,6 +101,30 @@ public class CourseController {
             result.setMsg(WebResponse.MSG_ERROR);
         }else {
             result.setMsg("删除成功");
+        }
+        return result;
+    }
+
+    @RequestMapping("/dels")
+    @ResponseBody
+    public ResponseResult dels( @RequestParam("ids[]") Integer[] ids) throws Exception{
+
+
+        ResponseResult result = new ResponseResult();
+        Integer del = courseService.dels(ids);
+        if(del == null || del < 1){
+
+            result.setCode(WebResponse.ERROR);
+            result.setMsg(WebResponse.MSG_ERROR);
+
+        }else {
+            if(del != ids.length){
+                log.warn("有部分id无效");
+                result.setCode(WebResponse.ERROR);
+                result.setMsg("有部分id无效");
+            }else {
+                result.setMsg("删除成功");
+            }
         }
         return result;
     }

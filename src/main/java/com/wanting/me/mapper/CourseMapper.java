@@ -16,4 +16,6 @@ public interface CourseMapper {
     Course getById(int id)throws SQLException;
     List<Course> search(Integer start,Integer rows)throws SQLException;
     Integer countTotal()throws SQLException;
+
+    Integer dels(Integer[] ids) throws SQLException;
 }

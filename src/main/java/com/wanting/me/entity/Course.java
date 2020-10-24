@@ -2,18 +2,20 @@ package com.wanting.me.entity;
 
 public class Course extends Base{
 
-    private int id;
+    private Integer id;
     private String name;
-    private int teacherId;
+    private Integer teacherId;
     private String teacherName;
     private String college;
     private String team;
 
-    public int getId() {
+
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -25,11 +27,11 @@ public class Course extends Base{
         this.name = name;
     }
 
-    public int getTeacherId() {
+    public Integer getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(int teacherId) {
+    public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
     }
 

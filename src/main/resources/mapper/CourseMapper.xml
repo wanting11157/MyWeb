@@ -12,6 +12,13 @@
       delete from course where id=#{id}
     </delete>
 
+    <delete id="dels" >
+        delete from course where id in
+        <foreach collection="array" open="(" close=")"  separator="," item="id" >
+            #{id}
+        </foreach>
+    </delete>
+
     <update id="update" parameterType="Course">
         UPDATE course SET
         name = #{name},
@@ -25,7 +32,7 @@
         id=#{id}
     </update>
 
-    <select id="getById" parameterType="int" resultType="Course">
+    <select id="getById" parameterType="Integer" resultType="Course">
         select  * from course where id=#{id}
     </select>
     <select id="search" resultType="Course">

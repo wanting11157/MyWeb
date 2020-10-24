@@ -10,6 +10,7 @@ import com.wanting.me.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -23,15 +24,12 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public Integer add(Score score)throws Exception {
 
-
-        // nn
-
-        Integer add = scoreMapper.add(score);
-
-        //
-
-
-
+        Integer add;
+         List<Score> scores = scoreMapper.checkrepeatscore(score);
+         if(scores!=null && scores.size()>0){
+             add = null;
+         }else
+             add=scoreMapper.add(score);;
 
         return add;
     }
@@ -65,22 +63,48 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
+    public List<Score> getByCourseIds(Integer[] courseIds) throws Exception {
+        List<Score> scores = scoreMapper.getByCourseIds(courseIds);
+        return scores;
+    }
+
+    @Override
+    public List<Score> getByUserAndCourse(Integer courseId, Integer studentId) throws SQLException {
+        return scoreMapper.getByUserAndCourse(courseId,studentId);
+    }
+
+    @Override
     public Score getById(Integer id)throws Exception {
         Score score = scoreMapper.getById(id);
         return score;
     }
 
     @Override
-    public List<Score> search(Score score, Integer page, Integer rows)throws Exception {
+    public List<Score> searchpage(Integer page, Integer rows)throws Exception {
         int start = ResponsePage.initStart(page,rows);
-        List<Score> scores = scoreMapper.search(score, start, rows);
+        List<Score> scores = scoreMapper.searchpage(start, rows);
         return scores;
     }
 
     @Override
-    public Integer countTotal(Score score, Integer page, Integer rows)throws Exception {
-        int start = ResponsePage.initStart(page,rows);
-        Integer total = scoreMapper.countTotal(score, start, rows);
+    public Integer countTotal()throws Exception {
+//        int start = ResponsePage.initStart(page,rows);
+        Integer total = scoreMapper.countTotal();
         return total;
+    }
+
+    @Override
+    public Integer getScore(Integer courseId, Integer studentId) throws Exception {
+        return scoreMapper.getScore(courseId,studentId);
+    }
+
+    @Override
+    public List<Score> getByStuIds(Integer[] stuIds) throws Exception {
+        return scoreMapper.getByStuIds(stuIds);
+    }
+
+    @Override
+    public Integer dels(Integer[] ids) throws Exception {
+        return scoreMapper.delByIds(ids);
     }
 }

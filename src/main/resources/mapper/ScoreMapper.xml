@@ -17,15 +17,30 @@
         <if test="courseId!=null and courseId!='' and courseId>1">
             and course_id=#{courseId}
         </if>
+        <if test="studentId!=null and studentId!='' and studentId>1">
+            and student_id=#{studentId}
+        </if>
     </delete>
+
+    <delete id="dels" >
+        delete from score where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </delete>
+
+    <delete id="delByIds">
+        delete from score where id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
 
     <update id="update" parameterType="Score">
         UPDATE score SET
         score = #{score},
-        update_time = now(),
-        remark = #{remark},
-        course_id = #{courseId},
-        student_id = #{studentId}
+        update_time = now()
         where
         id=#{id}
         
@@ -34,18 +49,61 @@
     <select id="getById" parameterType="Integer" resultType="Score">
         select  * from score where id = #{id}
     </select>
-    <select id="search"  resultType="Score"  >
-        select  * from score
-<!--        <where>-->
-<!--            <if test="courseId != null">course_id = #{courseId}</if>-->
-<!--            <if test="studentId != null">student_id = #{studentId}</if>-->
-<!--            <if test="remark != null">remark like concat('%',#{remark},'%')</if>-->
-<!--        </where>-->
 
-
+    <select id="checkrepeatscore" parameterType="Score" resultType="Score">
+        select  * from score where student_id = #{studentId} and course_id = #{courseId} and score=#{score}
     </select>
 
+    <select id="getScore" parameterType="Integer" resultType="Integer">
+        select  score from score where student_id = #{studentId} and course_id = #{courseId}
+    </select>
+
+
+<!--    <select id="getByCourseIds" resultMap="ScoreWithCourse" >-->
+<!--        select score.student_id,score.id,score.course_id,score.score,-->
+<!--        course.id as courId,course.name,course.teacher_id,course.teacher_name,-->
+<!--        course.college,course.team-->
+<!--        from score,course-->
+<!--        where score.course_id=course.id and score.student_id in-->
+<!--        <foreach collection="array" item="courseIds" open="(" separator="," close=")">-->
+<!--            #{courseIds}-->
+<!--        </foreach>-->
+<!--    </select>-->
+<!--    <resultMap id="ScoreWithCourse" type="Score">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="courseId" column="course_id"/>-->
+<!--        <result property="score" column="score"/>-->
+<!--        <result property="studentId" column="student_id"/>-->
+<!--        <collection property="courseList" ofType="Course" select="">-->
+<!--            <id property="id" column="courId"/>-->
+<!--            <result property="name" column="name"/>-->
+<!--            <result property="teacherId" column="teacher_id"/>-->
+<!--            <result property="teacherName" column="teacher_name"/>-->
+<!--            <result property="college" column="college"/>-->
+<!--            <result property="team" column="team"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+
+    <select id="searchpage"  resultType="Score"  >
+        select  * from score limit #{start},#{rows}
+       </select>
+
     <select id="countTotal"  resultType="Integer">
-         select count(*) from score limit #{start},#{rows}
+         select count(*) from score
+    </select>
+
+
+    <select id="getByStuIds"  resultType="Score">
+         select * from score where student_id in
+        <foreach collection="array" item="stuIds" open="(" separator="," close=")">
+            #{stuIds}
+        </foreach>
+    </select>
+
+    <select id="getByCourseIds"  resultType="Score">
+        select * from score where course_id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>

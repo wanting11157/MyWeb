@@ -1,11 +1,18 @@
 package com.wanting.me.entity;
 
-public class Score extends Base{
+import java.io.Serializable;
+import java.util.List;
+
+public class Score extends Base implements Serializable {
 
     private Integer id;
     private Integer courseId;
     private Integer score;
     private Integer studentId;
+
+    List<Course> courseList;
+
+
 
     public Integer getId() {
         return id;

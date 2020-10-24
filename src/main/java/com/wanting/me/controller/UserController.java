@@ -24,8 +24,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-   /* @Autowired
-    private UserMapper userMapper;*/
+
 
     @RequestMapping("/login")
     @ResponseBody
@@ -33,7 +32,7 @@ public class UserController {
         ResponseResult res = new ResponseResult();
         /**
          * 登录成功返回 名字
-         * 失败 返回 空 null
+         * 失败 返看回 空 null
          */
         String name = userService.login(username,password);
         if( name == null ){
@@ -141,10 +140,9 @@ public class UserController {
     @ResponseBody
     public ResponseResult dels( @RequestParam("ids[]") Integer[] ids) throws Exception{
 
-        String idsJSONString = JSONObject.toJSONString(ids);
-        log.info("执行了dels。。。。。ids = " + idsJSONString);
+//        String idsJSONString = JSONObject.toJSONString(ids);
+//        log.info("执行了dels。。。。。ids = " + idsJSONString);
 
-        ResponseResult result = new ResponseResult();
 //        boolean delSuccess = true;
 //        String msg = "";
 //        for(Integer id : ids) {
@@ -155,28 +153,30 @@ public class UserController {
 //            }
 //        }
 
+        ResponseResult result = new ResponseResult();
         Integer del = userService.dels(ids);
         if(del == null || del < 1){
 
             result.setCode(WebResponse.ERROR);
             result.setMsg(WebResponse.MSG_ERROR);
-            log.error("删除失败");
-
-            log.info("");
-
-            log.warn("");
-
-            log.error("id == null ");
+//            log.error("删除失败");
+//
+//            log.info("");
+//
+//            log.warn("");
+//
+//            log.error("id == null ");
 
 
             //日志级别
-
-
         }else {
             if(del != ids.length){
                 log.warn("有部分id无效");
+                result.setCode(WebResponse.ERROR);
+                result.setMsg("有部分id无效");
+            }else {
+                result.setMsg("删除成功");
             }
-            result.setMsg("删除成功");
         }
         return result;
     }

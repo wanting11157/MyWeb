@@ -1,8 +1,10 @@
 package com.wanting.me.mapper;
 
 
+import com.wanting.me.common.ResponsePage;
 import com.wanting.me.entity.Score;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +16,18 @@ public interface ScoreMapper {
     Integer update(Score score)throws SQLException;
     Integer del(Score score)throws SQLException;
     Score getById(Integer id)throws SQLException;
-    List<Score> search(Score score, Integer start, Integer rows)throws SQLException;
-    Integer countTotal(Score score, Integer start, Integer rows)throws SQLException;
+    List<Score> getByCourseIds(Integer[] courseIds)throws SQLException;
+    List<Score> getByUserAndCourse(Integer courseId,Integer studentId)throws SQLException;
+    List<Score> searchpage(Integer start, Integer rows)throws SQLException;
+    Integer countTotal()throws SQLException;
+
+    Integer getScore(Integer courseId, Integer studentId)throws SQLException;
+
+    List<Score> getByStuIds(Integer[] stuIds) throws SQLException;
+
+    Integer dels(List<Score> scores) throws SQLException;
+
+    Integer delByIds(Integer[] ids) throws SQLException;
+
+    List<Score> checkrepeatscore(Score score) throws SQLException;
 }

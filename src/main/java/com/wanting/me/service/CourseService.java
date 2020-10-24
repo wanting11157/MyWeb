@@ -14,4 +14,6 @@ public interface CourseService {
     Course getById(int id)throws Exception;
     List<Course> search(Integer page ,Integer rows)throws Exception;
     Integer countTotal()throws Exception;
+
+    Integer dels(Integer[] ids) throws Exception;
 }

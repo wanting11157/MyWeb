@@ -2,14 +2,16 @@ package com.wanting.me.service.impl;
 
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.entity.Course;
+import com.wanting.me.entity.Score;
 import com.wanting.me.mapper.CourseMapper;
 import com.wanting.me.mapper.ScoreMapper;
 import com.wanting.me.service.CourseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Slf4j
 @Service
 public class CourseServiceImpl implements CourseService {
 
@@ -71,5 +73,29 @@ public class CourseServiceImpl implements CourseService {
 //        int start = ResponsePage.initStart(page,rows);
         Integer total = courseMapper.countTotal();
         return total;
+    }
+
+    @Override
+    public Integer dels(Integer[] ids) throws Exception {
+        //查有没有成绩
+        Integer del;
+
+        List<Score> scores = scoreMapper.getByCourseIds(ids);
+
+        if(scores != null && scores.size()>0) {
+            Integer a=scoreMapper.dels(scores);
+            if(a==scores.size())
+                del=courseMapper.dels(ids);
+            else{
+                log.error("删除score表中courseid为："+ids+"失败");
+                del =null;
+            }
+        }else {
+            del = courseMapper.dels(ids);
+        }
+
+
+        return del;
+
     }
 }
