@@ -35,12 +35,71 @@
     <select id="getById" parameterType="Integer" resultType="Course">
         select  * from course where id=#{id}
     </select>
-    <select id="search" resultType="Course">
-        select  * from course limit #{start},#{rows}
 
+    <select id="search" resultType="Course">
+        select  * from course
+        <where>
+            <if test="course.id!=null and course.id!=''">
+                and id=#{course.id}
+            </if>
+            <if test="course.name!=null and course.name!=''">
+                and name=#{course.name}
+            </if>
+            <if test="course.teacherId!=null and course.teacherId!=''">
+                and teacher_id=#{course.teacherId}
+            </if>
+            <if test="course.teacherName!=null and course.teacherName!=''">
+                and teacher_name=#{course.teacherName}
+            </if>
+            <if test="course.college!=null and course.college!=''">
+                and college=#{course.college}
+            </if>
+            <if test="course.team!=null and course.team!=''">
+                and team=#{course.team}
+            </if>
+            <if test="course.updateTime!=null and course.updateTime!=''">
+                and DATE_FORMAT(update_time,'%Y-%m-%d')  =  #{course.updateTime}
+            </if>
+            <if test="course.createTime!=null and course.createTime!=''">
+                and DATE_FORMAT(create_time,'%Y-%m-%d')  =  #{course.createTime}
+            </if>
+            <if test="course.remark!=null and course.remark!=''">
+                and remark like concat('%',#{course.remark},'%')
+            </if>
+        </where>
+        limit #{start},#{rows}
     </select>
 
     <select id="countTotal"  resultType="Integer">
-         select count(*) from course 
+         select count(*) from course
+        <where>
+            <if test="course.id!=null and course.id!=''">
+                and id=#{course.id}
+            </if>
+            <if test="course.name!=null and course.name!=''">
+                and name=#{course.name}
+            </if>
+            <if test="course.teacherId!=null and course.teacherId!=''">
+                and teacher_id=#{course.teacherId}
+            </if>
+            <if test="course.teacherName!=null and course.teacherName!=''">
+                and teacher_name=#{course.teacherName}
+            </if>
+            <if test="course.college!=null and course.college!=''">
+                and college=#{course.college}
+            </if>
+            <if test="course.team!=null and course.team!=''">
+                and team=#{course.team}
+            </if>
+            <if test="course.updateTime!=null and course.updateTime!=''">
+                and DATE_FORMAT(update_time,'%Y-%m-%d')  =  #{course.updateTime}
+            </if>
+            <if test="course.createTime!=null and course.createTime!=''">
+                and DATE_FORMAT(create_time,'%Y-%m-%d')  =  #{course.createTime}
+            </if>
+            <if test="course.remark!=null and course.remark!=''">
+                and remark like concat('%',#{course.remark},'%')
+            </if>
+        </where>
     </select>
 </mapper>

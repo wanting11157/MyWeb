@@ -6,6 +6,7 @@ import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
+import com.wanting.me.entity.User;
 import com.wanting.me.service.ScoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,11 +116,13 @@ public class ScoreController {
 
     }
 
-    @RequestMapping("/searchpage")
+    @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage searchpage(Integer page, Integer rows) throws Exception{
+    public ResponsePage search(Score score, String courseName,Integer teacherId,
+            String teacherName,String studentName,Integer page, Integer rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<Score> scores = scoreService.searchpage(page,rows);
+        List<Score> scores = scoreService.search(score,courseName,teacherId,teacherName,
+                studentName,page,rows);
         if(scores == null || scores.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
@@ -128,7 +131,8 @@ public class ScoreController {
 //            result.setPage(page);
 //            result.setRows(rows);
 
-            Integer total = scoreService.countTotal();
+            Integer total = scoreService.countTotal(score,courseName,teacherId,teacherName,
+                    studentName,page,rows);
 
             result.setTotal(total);
         }

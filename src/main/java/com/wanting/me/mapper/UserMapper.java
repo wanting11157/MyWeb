@@ -15,8 +15,8 @@ public interface UserMapper {
     Integer del(int id)throws SQLException;
     Integer dels(Integer[] ids)throws SQLException;
     User getById(Integer id)throws SQLException;
-    List<User> search(Integer start, Integer rows)throws SQLException;
-    Integer countTotal()throws SQLException;
+    List<User> search(User user,Integer start, Integer rows)throws SQLException;
+    Integer countTotal(User user,Integer start, Integer rows)throws SQLException;
 
 
     List<User> getByHaoMa(String username)throws SQLException;

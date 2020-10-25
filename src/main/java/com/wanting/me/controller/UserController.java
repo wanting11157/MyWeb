@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
+import com.wanting.me.entity.Score;
 import com.wanting.me.entity.User;
 import com.wanting.me.service.UserService;
+import com.wanting.me.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //private UserServiceImpl userService1 = new UserServiceImpl2() ;
 
     @RequestMapping("/login")
     @ResponseBody
@@ -93,9 +96,9 @@ public class UserController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(@RequestParam(required = false) Integer page , Integer rows) throws Exception{
+    public ResponsePage search(User user, @RequestParam(required = false) Integer page , Integer rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<User> users = userService.search(page,rows);
+        List<User> users = userService.search(user,page,rows);
         if(users.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
@@ -114,7 +117,7 @@ public class UserController {
 //            result.setPage(page);
 //            result.setRows(rows);
 
-            Integer total = userService.countTotal();
+            Integer total = userService.countTotal(user,page,rows);
 
             result.setTotal(total);
         }

@@ -95,18 +95,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> search(Integer page, Integer rows) throws Exception {
+    public List<User> search(User user,Integer page, Integer rows) throws Exception {
 
 
         Integer start = ResponsePage.initStart(page,rows);
-        List<User> users = userMapper.search(start,rows);
+//        if(user!=null) {
+//            if (user.getSex() != 1 && user.getSex() != 2)
+//                user.setSex(null);
+//        }
+        List<User> users = userMapper.search(user,start,rows);
+
         return users;
     }
 
     @Override
-    public Integer countTotal() throws Exception {
-//        int start = ResponsePage.initStart(page,rows);
-        Integer total = userMapper.countTotal();
+    public Integer countTotal(User user,Integer page, Integer rows) throws Exception {
+        int start = ResponsePage.initStart(page,rows);
+        Integer total = userMapper.countTotal(user,start,rows);
         return total;
     }
 

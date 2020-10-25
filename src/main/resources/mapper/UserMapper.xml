@@ -38,15 +38,73 @@
 
     <select id="getById" parameterType="Integer" resultType="User">
         select  * from user where id=#{id}
-
     </select>
-    <select id="search" resultType="User">
-        select  * from user limit #{start},#{rows}
 
+    <select id="search" resultType="User" >
+        select  * from user
+        <where>
+            <if test="user.id!=null and user.id!=''">
+                and id=#{user.id}
+            </if>
+            <if test="user.name!=null and user.name!=''">
+                and name=#{user.name}
+            </if>
+            <if test="user.major!=null and user.major!=''">
+                and major=#{user.major}
+            </if>
+            <if test="user.haoma!=null and user.haoma!=''">
+                and haoma=#{user.haoma}
+            </if>
+            <if test="user.sex!=null and user.sex!=0">
+                and sex=#{user.sex}
+            </if>
+            <if test="user.college!=null and user.college!=''">
+                and college=#{user.college}
+            </if>
+            <if test="user.updateTime!=null and user.updateTime!=''">
+                and DATE_FORMAT(update_time,'%Y-%m-%d')  =  #{user.updateTime}
+            </if>
+            <if test="user.createTime!=null and user.createTime!=''">
+                and DATE_FORMAT(create_time,'%Y-%m-%d')  =  #{user.createTime}
+            </if>
+            <if test="user.remark!=null and user.remark!=''">
+                and remark like concat('%',#{user.remark},'%')
+            </if>
+        </where>
+        limit #{start},#{rows}
     </select>
 
     <select id="countTotal" resultType="Integer">
       select  count(*) from user
+        <where>
+            <if test="user.id!=null and user.id!=''">
+                and id=#{user.id}
+            </if>
+            <if test="user.name!=null and user.name!=''">
+                and name=#{user.name}
+            </if>
+            <if test="user.major!=null and user.major!=''">
+                and major=#{user.major}
+            </if>
+            <if test="user.haoma!=null and user.haoma!=''">
+                and haoma=#{user.haoma}
+            </if>
+            <if test="user.sex!=null and user.sex!=0">
+                and sex=#{user.sex}
+            </if>
+            <if test="user.college!=null and user.college!=''">
+                and college=#{user.college}
+            </if>
+            <if test="user.updateTime!=null and user.updateTime!=''">
+                and DATE_FORMAT(update_time,'%Y-%m-%d')  =  #{user.updateTime}
+            </if>
+            <if test="user.createTime!=null and user.createTime!=''">
+                and DATE_FORMAT(create_time,'%Y-%m-%d')  =  #{user.createTime}
+            </if>
+            <if test="user.remark!=null and user.remark!=''">
+                and remark like concat('%',#{user.remark},'%')
+            </if>
+        </where>
     </select>
 
     <select id="getByHaoMa" parameterType="String" resultType="User">

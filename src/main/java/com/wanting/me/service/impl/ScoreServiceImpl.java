@@ -3,6 +3,7 @@ package com.wanting.me.service.impl;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
+import com.wanting.me.entity.User;
 import com.wanting.me.mapper.CourseMapper;
 import com.wanting.me.mapper.ScoreMapper;
 import com.wanting.me.service.CourseService;
@@ -80,16 +81,20 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<Score> searchpage(Integer page, Integer rows)throws Exception {
+    public List<Score> search(Score score, String courseName,Integer teacherId,
+                              String teacherName,String studentName,Integer page, Integer rows)throws Exception {
         int start = ResponsePage.initStart(page,rows);
-        List<Score> scores = scoreMapper.searchpage(start, rows);
+        List<Score> scores = scoreMapper.search(score,courseName,teacherId,teacherName,
+                studentName,start,rows);
         return scores;
     }
 
     @Override
-    public Integer countTotal()throws Exception {
-//        int start = ResponsePage.initStart(page,rows);
-        Integer total = scoreMapper.countTotal();
+    public Integer countTotal(Score score, String courseName,Integer teacherId,
+                              String teacherName,String studentName,Integer page, Integer rows)throws Exception {
+        int start = ResponsePage.initStart(page,rows);
+        Integer total = scoreMapper.countTotal(score,courseName,teacherId,teacherName,
+                studentName,start,rows);
         return total;
     }
 

@@ -12,8 +12,8 @@ public interface UserService {
     Integer del(int id)throws Exception;
     Integer dels(Integer[] ids)throws Exception;
     User getById(Integer id)throws Exception;
-    List<User> search(Integer page, Integer rows)throws Exception;
-    Integer countTotal()throws Exception;
+    List<User> search(User user,Integer page, Integer rows)throws Exception;
+    Integer countTotal(User user,Integer page, Integer rows)throws Exception;
 
     String login(String username, String password)throws Exception;
 }

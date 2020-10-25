@@ -2,7 +2,9 @@ package com.wanting.me.mapper;
 
 
 import com.wanting.me.common.ResponsePage;
+import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
+import com.wanting.me.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,8 +20,10 @@ public interface ScoreMapper {
     Score getById(Integer id)throws SQLException;
     List<Score> getByCourseIds(Integer[] courseIds)throws SQLException;
     List<Score> getByUserAndCourse(Integer courseId,Integer studentId)throws SQLException;
-    List<Score> searchpage(Integer start, Integer rows)throws SQLException;
-    Integer countTotal()throws SQLException;
+    List<Score> search(Score score, String courseName,Integer teacherId,
+                       String teacherName,String studentName,Integer start, Integer rows)throws SQLException;
+    Integer countTotal(Score score, String courseName,Integer teacherId,
+                       String teacherName,String studentName,Integer start, Integer rows)throws SQLException;
 
     Integer getScore(Integer courseId, Integer studentId)throws SQLException;
 

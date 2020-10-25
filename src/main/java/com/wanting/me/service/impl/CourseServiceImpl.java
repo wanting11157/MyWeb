@@ -62,16 +62,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> search(Integer page ,Integer rows) throws Exception{
+    public List<Course> search(Course course,Integer page ,Integer rows) throws Exception{
         Integer start = ResponsePage.initStart(page,rows);
-        List<Course> courses = courseMapper.search(start,rows);
+        List<Course> courses = courseMapper.search(course,start,rows);
         return courses;
     }
 
     @Override
-    public Integer countTotal()throws Exception {
-//        int start = ResponsePage.initStart(page,rows);
-        Integer total = courseMapper.countTotal();
+    public Integer countTotal(Course course,Integer page ,Integer rows)throws Exception {
+        int start = ResponsePage.initStart(page,rows);
+        Integer total = courseMapper.countTotal(course,start,rows);
         return total;
     }
 

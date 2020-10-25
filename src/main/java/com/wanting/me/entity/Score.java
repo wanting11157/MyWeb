@@ -10,7 +10,7 @@ public class Score extends Base implements Serializable {
     private Integer score;
     private Integer studentId;
 
-    List<Course> courseList;
+
 
 
 

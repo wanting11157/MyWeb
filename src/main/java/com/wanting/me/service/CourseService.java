@@ -12,8 +12,8 @@ public interface CourseService {
     Integer update(Course course)throws Exception;
     Integer del(int id)throws Exception;
     Course getById(int id)throws Exception;
-    List<Course> search(Integer page ,Integer rows)throws Exception;
-    Integer countTotal()throws Exception;
+    List<Course> search(Course course,Integer page ,Integer rows)throws Exception;
+    Integer countTotal(Course course,Integer page ,Integer rows)throws Exception;
 
     Integer dels(Integer[] ids) throws Exception;
 }
