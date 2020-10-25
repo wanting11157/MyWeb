@@ -3,9 +3,9 @@
 <mapper namespace="com.wanting.me.mapper.CourseMapper">
    <insert id="add" parameterType="Course">
        INSERT INTO course
-        (name, teacher_id, teacher_name, college, team, create_time, remark)
+        (name, teacher_name, college, team, create_time, remark)
         VALUES
-        (#{name}, #{teacherId}, #{teacherName}, #{college}, #{team}, now(), #{remark})
+        (#{name}, #{teacherName}, #{college}, #{team}, now(), #{remark})
    </insert>
 
     <delete id="del" parameterType="int">
@@ -22,7 +22,6 @@
     <update id="update" parameterType="Course">
         UPDATE course SET
         name = #{name},
-        teacher_id = #{teacherId},
         teacher_name = #{teacherName},
         college = #{college},
         team = #{team},
@@ -44,9 +43,6 @@
             </if>
             <if test="course.name!=null and course.name!=''">
                 and name=#{course.name}
-            </if>
-            <if test="course.teacherId!=null and course.teacherId!=''">
-                and teacher_id=#{course.teacherId}
             </if>
             <if test="course.teacherName!=null and course.teacherName!=''">
                 and teacher_name=#{course.teacherName}
@@ -78,9 +74,6 @@
             </if>
             <if test="course.name!=null and course.name!=''">
                 and name=#{course.name}
-            </if>
-            <if test="course.teacherId!=null and course.teacherId!=''">
-                and teacher_id=#{course.teacherId}
             </if>
             <if test="course.teacherName!=null and course.teacherName!=''">
                 and teacher_name=#{course.teacherName}
