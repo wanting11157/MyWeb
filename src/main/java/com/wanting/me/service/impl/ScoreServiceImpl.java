@@ -1,6 +1,7 @@
 package com.wanting.me.service.impl;
 
 import com.wanting.me.common.ResponsePage;
+import com.wanting.me.dto.ScoreDto;
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
 import com.wanting.me.entity.User;
@@ -81,20 +82,16 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<Score> search(Score score, String courseName,Integer teacherId,
-                              String teacherName,String studentName,Integer page, Integer rows)throws Exception {
+    public List<ScoreDto> search(Score score, Integer page, Integer rows)throws Exception {
         int start = ResponsePage.initStart(page,rows);
-        List<Score> scores = scoreMapper.search(score,courseName,teacherId,teacherName,
-                studentName,start,rows);
+        List<ScoreDto> scores = scoreMapper.search(score,start,rows);
         return scores;
     }
 
     @Override
-    public Integer countTotal(Score score, String courseName,Integer teacherId,
-                              String teacherName,String studentName,Integer page, Integer rows)throws Exception {
+    public Integer countTotal(Score score,Integer page, Integer rows)throws Exception {
         int start = ResponsePage.initStart(page,rows);
-        Integer total = scoreMapper.countTotal(score,courseName,teacherId,teacherName,
-                studentName,start,rows);
+        Integer total = scoreMapper.countTotal(score,start,rows);
         return total;
     }
 

@@ -4,6 +4,7 @@ package com.wanting.me.controller;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
+import com.wanting.me.dto.ScoreDto;
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
 import com.wanting.me.entity.User;
@@ -118,11 +119,9 @@ public class ScoreController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public ResponsePage search(Score score, String courseName,Integer teacherId,
-            String teacherName,String studentName,Integer page, Integer rows) throws Exception{
+    public ResponsePage search(Score score,Integer page, Integer rows) throws Exception{
         ResponsePage result = new ResponsePage();
-        List<Score> scores = scoreService.search(score,courseName,teacherId,teacherName,
-                studentName,page,rows);
+        List<ScoreDto> scores = scoreService.search(score,page,rows);
         if(scores == null || scores.size() < 1){
             result.setCode(WebResponse.NODATA);
             result.setMsg(WebResponse.MSG_NODATA);
@@ -131,8 +130,7 @@ public class ScoreController {
 //            result.setPage(page);
 //            result.setRows(rows);
 
-            Integer total = scoreService.countTotal(score,courseName,teacherId,teacherName,
-                    studentName,page,rows);
+            Integer total = scoreService.countTotal(score,page,rows);
 
             result.setTotal(total);
         }

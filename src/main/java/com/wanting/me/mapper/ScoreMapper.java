@@ -2,6 +2,7 @@ package com.wanting.me.mapper;
 
 
 import com.wanting.me.common.ResponsePage;
+import com.wanting.me.dto.ScoreDto;
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
 import com.wanting.me.entity.User;
@@ -20,10 +21,8 @@ public interface ScoreMapper {
     Score getById(Integer id)throws SQLException;
     List<Score> getByCourseIds(Integer[] courseIds)throws SQLException;
     List<Score> getByUserAndCourse(Integer courseId,Integer studentId)throws SQLException;
-    List<Score> search(Score score, String courseName,Integer teacherId,
-                       String teacherName,String studentName,Integer start, Integer rows)throws SQLException;
-    Integer countTotal(Score score, String courseName,Integer teacherId,
-                       String teacherName,String studentName,Integer start, Integer rows)throws SQLException;
+    List<ScoreDto> search(Score score, Integer start, Integer rows)throws SQLException;
+    Integer countTotal(Score score,Integer start, Integer rows)throws SQLException;
 
     Integer getScore(Integer courseId, Integer studentId)throws SQLException;
 

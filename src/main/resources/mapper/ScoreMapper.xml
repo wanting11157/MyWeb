@@ -84,65 +84,42 @@
 <!--        </collection>-->
 <!--    </resultMap>-->
 
-    <select id="search"  resultMap="ScoreWithCouInfoAndUsInfo">
-        select  score.*,course.name as courseName, course.teacher_id as teacherId,
-        course.teacher_name as teacherName,user.name as studentName
-        from score,course,user
+    <select id="search"  resultType="com.wanting.me.dto.ScoreDto">
+        select
+            score.*,
+            course.name as courseName,
+            course.teacher_name as teacherName,
+            user.name as studentName
+        from score
+        left join course on score.course_id=course.id
+        left join user on score.student_id=user.id
         <where>
-            score.course_id=course.id and score.student_id=user.id
-            <if test="score.id!=null and score.id!=''">
+            <if test="score.id != null and score.id!=''">
                 and score.id=#{score.id}
             </if>
-            <if test="score.courseId!=null and score.courseId!=''">
+            <if test="score.courseId != null and score.courseId!=''">
                 and score.course_id=#{score.courseId}
             </if>
-            <if test="score.score!=null and score.score!=''">
+            <if test="score.score != null and score.score!=''">
                 and score.score=#{score.score}
             </if>
-            <if test="score.studentId!=null and score.studentId!=''">
+            <if test="score.studentId != null and score.studentId!=''">
                 and score.student_id=#{score.studentId}
             </if>
-            <if test="score.updateTime!=null and score.updateTime!=''">
+            <if test="score.updateTime != null and score.updateTime!=''">
                 and DATE_FORMAT(score.update_time,'%Y-%m-%d')  =  #{score.updateTime}
             </if>
-            <if test="score.createTime!=null and score.createTime!=''">
+            <if test="score.createTime != null and score.createTime!=''">
                 and DATE_FORMAT(score.create_time,'%Y-%m-%d')  =  #{score.createTime}
             </if>
-            <if test="score.remark!=null and score.remark!=''">
+            <if test="score.remark != null and score.remark!=''">
                 and score.remark like concat('%',#{score.remark},'%')
             </if>
-            <if test="courseName!=null and courseName!=''">
-                and course.name=#{courseName}
-            </if>
-            <if test="teacherId!=null and teacherId!=''">
-                and course.teacher_id=#{teacherId}
-            </if>
-            <if test="teacherName!=null and teacherName!=''">
-                and course.teacher_name=#{teacherName}
-            </if>
-            <if test="studentName!=null and studentName!=''">
-                and user.name=#{studentName}
-            </if>
+
         </where>
         limit #{start},#{rows}
     </select>
-    <resultMap id="ScoreWithCouInfoAndUsInfo" type="Score">
-        <id property="id" column="id"/>
-        <result property="score" column="score"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="remark" column="remark"/>
-        <association property="courseId" javaType="Course">
-            <id property="id" column="course_id"/>
-            <result property="name" column="courseName"/>
-            <result property="teacherId" column="teacherId"/>
-            <result property="teacherName" column="teacherName"/>
-        </association>
-        <association property="studentId" javaType="User">
-            <id property="id" column="student_id"/>
-            <result property="name" column="studentName"/>
-        </association>
-    </resultMap>
+
 
 
     <select id="countTotal"  resultType="Integer">
