@@ -2,6 +2,7 @@ package com.wanting.me.service;
 
 
 import com.wanting.me.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,4 +17,10 @@ public interface UserService {
     Integer countTotal(User user,Integer page, Integer rows)throws Exception;
 
     String login(String username, String password)throws Exception;
+
+    void hasPhoto(Integer id)throws Exception;
+
+    Integer importExcel(MultipartFile file)throws Exception;
+
+    List<User> searchAll() throws Exception;
 }

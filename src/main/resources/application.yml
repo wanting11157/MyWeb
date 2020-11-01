@@ -15,3 +15,11 @@ mybatis:
 
   configuration:
     map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.wanting.me.mapper: debug
+upload:
+  temp: C:\workspace57\MyWebFont\resources\upload\
+  user:
+    img: images\user\

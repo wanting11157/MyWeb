@@ -30,8 +30,10 @@ public class ScoreServiceImpl implements ScoreService {
          List<Score> scores = scoreMapper.checkrepeatscore(score);
          if(scores!=null && scores.size()>0){
              add = null;
-         }else
-             add=scoreMapper.add(score);;
+         }else {
+             add=scoreMapper.add(score);
+         }
+        ;
 
         return add;
     }

@@ -1,22 +1,30 @@
 package com.wanting.me.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
-import com.wanting.me.entity.Score;
 import com.wanting.me.entity.User;
 import com.wanting.me.service.UserService;
-import com.wanting.me.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -26,7 +34,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Value("${upload.temp}")
+    private String basePath;
 
+    @Value("${upload.user.img}")
+    private String userImg;
     //private UserServiceImpl userService1 = new UserServiceImpl2() ;
 
     @RequestMapping("/login")
@@ -59,6 +71,12 @@ public class UserController {
             result.setMsg(WebResponse.MSG_ERROR);
         }else {
             result.setMsg("注册成功");
+//            Integer page=null;
+//            Integer rows=30;
+//            List<User>  users = userService.search(user,page,rows);
+//            log.info(users.toString());
+//            User resuUser = users.get(0);
+//            result.setData(resuUser.getId());
         }
         return result;
 
@@ -123,6 +141,11 @@ public class UserController {
         }
         return result;
 
+        // postHandle
+        //---spring 对响应信息的封装处理
+        // afterHandle   把对象序列化成json字符串
+
+
     }
     @RequestMapping("/del")
     @ResponseBody
@@ -183,5 +206,283 @@ public class UserController {
         }
         return result;
     }
+
+    @RequestMapping("/uploadFile")
+    @ResponseBody
+    public ResponseResult uploadFile(MultipartFile file) throws Exception{
+
+        ResponseResult result = new ResponseResult();
+        String originalFilename = file.getOriginalFilename();
+        int index = originalFilename.lastIndexOf('.');
+        String endName = originalFilename.substring(index);
+        log.info("userImg= "+userImg + ",文件名："+ originalFilename);
+        File userPath = new File(basePath+userImg);
+        boolean exists = userPath.exists();
+
+        long l = System.currentTimeMillis();
+        double random = Math.random();
+        String s = random + "";
+
+        if(!exists){
+            userPath.mkdirs();
+        }
+        String path = basePath+userImg+l+s.substring(2)+endName;
+        File dest = new File(path);
+        try {
+
+            file.transferTo(dest);
+
+            result.setData(""+l+s.substring(2)+endName);
+//            userService.hasPhoto(id);
+
+        }catch (Exception e){
+            String msg = "上传异常";
+            result.setCode(WebResponse.ERROR);
+            result.setMsg(msg);
+            log.error(msg,e);
+        }
+        return result;
+    }
+
+    @RequestMapping("/downloadFile")
+    public void downloadFile(Integer userId, String fileName, HttpServletResponse response) {
+        // 导入 导出 excel 参与 ： https://www.cnblogs.com/linjiqin/p/10975761.html
+
+        //参考：https://www.cnblogs.com/xiaoyue1606bj/p/10985764.html
+
+        try {
+            //文件读到内存
+            File rs = new File(basePath + userImg + fileName);
+            FileInputStream fileInputStream = new FileInputStream(rs);
+            byte[] content = new byte[fileInputStream.available()];
+
+            fileInputStream.read(content);
+
+
+            //文件从内存写到浏览器指定的地址
+            response.setContentType("bin");
+            response.setHeader("Content-Disposition","attachment;filename="+fileName);
+            ServletOutputStream outputStream = response.getOutputStream();
+
+            outputStream.write(content);
+
+            //如果文件很大，要用多次读入和写出来实现
+//        byte[] content = new byte[1024*1024];//一次读 1M
+//        while (fileInputStream.read(content)>0){
+//            outputStream.write(content);
+//        }
+//        outputStream.flush();
+
+            //关闭 读入 写出 通道
+            outputStream.close();
+            fileInputStream.close();
+        }catch (IOException e){
+            log.error("下载IO异常:"+e.getMessage());
+        }
+    }
+
+    /**
+     * 导入
+     * @param file
+     * @return
+     */
+    @RequestMapping("/importExcel")
+    @ResponseBody
+    public ResponseResult importExcel(MultipartFile file) {
+
+        System.out.println("我进来了");
+        Integer successCou = null;
+            ModelAndView modelAndView = new ModelAndView();
+            try {
+                successCou = userService.importExcel(file);
+            } catch (Exception e) {
+                modelAndView.addObject("msg", e.getMessage());
+//                return "index";
+            }
+            modelAndView.addObject("msg", "数据导入成功");
+
+//            return "index";
+
+
+
+        ResponseResult result = new ResponseResult();
+        result.setMsg("成功导入："+successCou+"条");
+        log.info("成功导入："+successCou+"条");
+//        try {
+//
+//
+//            //把file转成  Excel File to Object;
+//             List<User> users =  null;
+//            //TODO Excel 怎么转成 List<User> 是重点
+//
+//            //一个个保存user 对象（也可以保存user前查一下重复性，不重复就保存）
+//            //成功保存的计数器
+//            int successCount = 0;
+//            //保存失败的计数器
+//            int errorCount = 0;
+//            for (User user : users) {
+//                // 可以先查user在表里有没有存在，有就跳过，没有就add进去
+//                int add = userService.add(user);
+//                if(add>0){
+//                    successCount++;
+//                }else {
+//                    errorCount++;
+//                }
+//            }
+//
+//
+//
+//        }catch (Exception e){
+//            log.error("导入异常："+e.getMessage(),e);
+//        }
+        return result;
+    }
+
+
+    /**
+     * 导出
+     * @param user 带着查询条件用户对象
+     * @param response 响应对象
+     */
+    @RequestMapping("/exportFile")
+    public void exportFile(User user, HttpServletResponse response) throws Exception {
+        // 导入 导出 excel 参与 ： https://www.cnblogs.com/linjiqin/p/10975761.html
+//        try {
+
+        // 第一步，创建一个webbook，对应一个Excel文件
+        HSSFWorkbook wb = new HSSFWorkbook();
+        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+        HSSFSheet sheet = wb.createSheet("sheet1");
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+        HSSFRow row = sheet.createRow(0);
+        // 第四步，创建单元格，并设置值表头 设置表头居中
+        HSSFCellStyle style = wb.createCellStyle();
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue("id");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(1);
+        cell.setCellValue("姓名");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(2);
+        cell.setCellValue("专业");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(3);
+        cell.setCellValue("学号");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(4);
+        cell.setCellValue("性别");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(5);
+        cell.setCellValue("院系");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(6);
+        cell.setCellValue("密码");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(7);
+        cell.setCellValue("更新时间");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(8);
+        cell.setCellValue("创建时间");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(9);
+        cell.setCellValue("备注");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(10);
+        cell.setCellValue("头像");
+        cell.setCellStyle(style);
+
+        // 第五步，写入实体数据 实际应用中这些数据从数据库得到，
+//                List<Student> list = userMapper.selectAll();
+        //查出要导出的用户信息 List<User> users;
+        List<User> users = userService.searchAll();
+
+        for (int i = 0; i < users.size(); i++) {
+            row = sheet.createRow(i + 1);
+            User user1 = users.get(i);
+            // 第四步，创建单元格，并设置值
+            row.createCell(0).setCellValue(user1.getId());
+            row.createCell(1).setCellValue(user1.getName());
+            row.createCell(2).setCellValue(user1.getMajor());
+            row.createCell(3).setCellValue(user1.getHaoma());
+            if (user1.getSex() == 1) {
+                row.createCell(4).setCellValue("男");
+            } else if (user1.getSex() == 2) {
+                row.createCell(4).setCellValue("女");
+            }
+            row.createCell(5).setCellValue(user1.getCollege());
+            row.createCell(6).setCellValue(user1.getPassword());
+            row.createCell(7).setCellValue(user1.getUpdateTime());
+            row.createCell(8).setCellValue(user1.getCreateTime());
+            row.createCell(9).setCellValue(user1.getRemark());
+            row.createCell(10).setCellValue(user1.getPhoto());
+//                    cell = row.createCell(3);
+//                    cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(stu.getTime()));
+        }
+        //第六步,输出Excel文件
+        OutputStream output = response.getOutputStream();
+        response.reset();
+        long filename = System.currentTimeMillis();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
+        String fileName = df.format(new Date());// new Date()为获取当前系统时间
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xls");
+        response.setContentType("application/msexcel");
+        wb.write(output);
+        output.close();
+    }
+//            }
+//
+//
+//            //通过POI把 users  转成 excel文件
+//            //  POI  api
+//            //把excel文件通过文件流的形式下载
+//            //File file = from users to Excel File;
+//            //TODO 对象集合 转成 Excel文件   重点
+//            File file = null;
+//            //自己给要下载的文件命名
+//            String fileName = "";
+//
+//            FileInputStream fileInputStream = new FileInputStream(file);
+//
+//            byte[] content = new byte[fileInputStream.available()];
+//
+//            fileInputStream.read(content);
+//
+//
+//            //文件从内存写到浏览器指定的地址
+//            response.setContentType("bin");
+//            response.setHeader("Content-Disposition","attachment;filename="+fileName);
+//            ServletOutputStream outputStream = response.getOutputStream();
+//
+//            outputStream.write(content);
+//
+//            //如果文件很大，要用多次读入和写出来实现
+////        byte[] content = new byte[1024*1024];//一次读 1M
+////        while (fileInputStream.read(content)>0){
+////            outputStream.write(content);
+////        }
+////        outputStream.flush();
+//
+//            //关闭 读入 写出 通道
+//            outputStream.close();
+//            fileInputStream.close();
+//        }catch (IOException e){
+//            log.error("导出时IO异常:"+e.getMessage());
+//        } catch (Exception e) {
+//            //e.printStackTrace();
+//            log.error("导出时查询用户信息异常："+ e.getMessage(),e);
+//        }
+//    }
 
 }

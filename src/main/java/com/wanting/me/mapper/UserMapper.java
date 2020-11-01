@@ -20,4 +20,8 @@ public interface UserMapper {
 
 
     List<User> getByHaoMa(String username)throws SQLException;
+
+    void hasPhoto(Integer id)throws SQLException;
+
+    List<User> searchAll()throws SQLException;
 }

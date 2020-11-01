@@ -84,9 +84,9 @@ public class CourseServiceImpl implements CourseService {
 
         if(scores != null && scores.size()>0) {
             Integer a=scoreMapper.dels(scores);
-            if(a==scores.size())
+            if(a==scores.size()) {
                 del=courseMapper.dels(ids);
-            else{
+            } else{
                 log.error("删除score表中courseid为："+ids+"失败");
                 del =null;
             }

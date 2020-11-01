@@ -10,6 +10,15 @@ public class User extends Base{
       private Integer sex;
       private String college;
       private String password;
+      private String photo;
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public Integer getId() {
         return id;
@@ -51,10 +60,6 @@ public class User extends Base{
         this.haoma = haoma;
     }
 
-
-
-
-
     public String getCollege() {
         return college;
     }
@@ -81,6 +86,7 @@ public class User extends Base{
                 ", sex=" + sex +
                 ", college='" + college + '\'' +
                 ", password='" + password + '\'' +
+                ", photo='" + photo + '\'' +
                 '}';
     }
 }
