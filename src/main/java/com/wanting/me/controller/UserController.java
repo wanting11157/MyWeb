@@ -8,6 +8,11 @@ import com.wanting.me.entity.User;
 import com.wanting.me.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -21,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +37,8 @@ import java.util.UUID;
 @RequestMapping("/user")
 public class UserController {
     //Logger log = LoggerFactory.getLogger(UserController.class);
+    private final static String XLS = "xls";
+    private final static String XLSX = "xlsx";
 
     @Autowired
     private UserService userService;
@@ -288,62 +296,149 @@ public class UserController {
      */
     @RequestMapping("/importExcel")
     @ResponseBody
-    public ResponseResult importExcel(MultipartFile file) {
+    public ResponseResult importExcel(MultipartFile file) throws Exception {
 
-        System.out.println("我进来了");
-        Integer successCou = null;
-            ModelAndView modelAndView = new ModelAndView();
-            try {
-                successCou = userService.importExcel(file);
-            } catch (Exception e) {
-                modelAndView.addObject("msg", e.getMessage());
-//                return "index";
+        //        1、用HSSFWorkbook打开或者创建“Excel文件对象”
+        //
+        //        2、用HSSFWorkbook对象返回或者创建Sheet对象
+        //
+        //        3、用Sheet对象返回行对象，用行对象得到Cell对象
+        //
+        //        4、对Cell对象读写。
+        //获得文件名
+        ResponseResult responseResult = new ResponseResult();
+        Integer successCount = 0;
+        Integer repeat =0;
+        Integer error = 0;
+        int add;
+        List<User> errUser = null;
+        Workbook workbook = null;
+        String fileName = file.getOriginalFilename();
+        if (fileName.endsWith(XLS)) {
+            //2003
+            workbook = new HSSFWorkbook(file.getInputStream());
+        } else if (fileName.endsWith(XLSX)) {
+            //2007
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } else {
+            throw new Exception("文件不是Excel文件");
+        }
+
+        Sheet sheet = workbook.getSheet("sheet1");
+        // 指的行数，一共有多少行+
+        int rows = sheet.getLastRowNum();
+        if (rows == 0) {
+            throw new Exception("请填写数据");
+        }
+        for (int i = 1; i <= rows + 1; i++) {
+            // 读取左上端单元格
+            Row row = sheet.getRow(i);
+            // 行不为空
+            if (row != null) {
+                // **读取cell**
+                User user = new User();
+                //姓名
+                String name = getCellValue(row.getCell(0));
+                user.setName(name);
+                //班级
+                String major = getCellValue(row.getCell(1));
+                user.setMajor(major);
+                //分数
+                String haoma = getCellValue(row.getCell(2));
+                user.setHaoma(haoma);
+
+                String sex = getCellValue(row.getCell(3));
+                if (sex.equals("男")) {
+                    user.setSex(1);
+                } else if (sex.equals("女")) {
+                    user.setSex(2);
+                }
+
+                String college = getCellValue(row.getCell(4));
+                user.setCollege(college);
+
+                String password = getCellValue(row.getCell(5));
+                user.setPassword(password);
+
+                String remark = getCellValue(row.getCell(6));
+                user.setRemark(remark);
+
+                String photo = getCellValue(row.getCell(7));
+                user.setPhoto(photo);
+
+                List<User> resuUser = userService.search(user,null,2);
+                if (resuUser.size()>0){
+                    repeat++;
+                }else{
+                    add = userService.add(user);
+                    if (add == 1) {
+                        successCount++;
+                    }else{
+                        error++;
+                        errUser.add(user);
+                        responseResult.setCode(WebResponse.ERROR);
+                    }
+                }
+
+
             }
-            modelAndView.addObject("msg", "数据导入成功");
-
-//            return "index";
-
-
-
-        ResponseResult result = new ResponseResult();
-        result.setMsg("成功导入："+successCou+"条");
-        log.info("成功导入："+successCou+"条");
-//        try {
-//
-//
-//            //把file转成  Excel File to Object;
-//             List<User> users =  null;
-//            //TODO Excel 怎么转成 List<User> 是重点
-//
-//            //一个个保存user 对象（也可以保存user前查一下重复性，不重复就保存）
-//            //成功保存的计数器
-//            int successCount = 0;
-//            //保存失败的计数器
-//            int errorCount = 0;
-//            for (User user : users) {
-//                // 可以先查user在表里有没有存在，有就跳过，没有就add进去
-//                int add = userService.add(user);
-//                if(add>0){
-//                    successCount++;
-//                }else {
-//                    errorCount++;
-//                }
-//            }
-//
-//
-//
-//        }catch (Exception e){
-//            log.error("导入异常："+e.getMessage(),e);
-//        }
-        return result;
+        }
+        responseResult.setData("成功插入"+successCount+"条，因重复而未插入"+repeat+"条，插入异常"
+                +error+"条，插入异常而并未插入的数据为"+errUser);
+        return responseResult;
     }
 
+    public String getCellValue(Cell cell) {
+        String value = null;
+        if (cell != null) {
+            // 以下是判断数据的类型
+            switch (cell.getCellType()) {
+                // 数字
+                case HSSFCell.CELL_TYPE_NUMERIC:
+                    value = cell.getNumericCellValue() + "";
+                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                        Date date = cell.getDateCellValue();
+                        if (date != null) {
+                            value = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                        } else {
+                            value = "";
+                        }
+                    } else {
+                        value = new DecimalFormat("0").format(cell.getNumericCellValue());
+                    }
+                    value.trim();
+                    break;
+                case HSSFCell.CELL_TYPE_STRING: // 字符串
+                    value = cell.getStringCellValue();
+                    value.trim();
+                    break;
+                case HSSFCell.CELL_TYPE_BOOLEAN: // Boolean
+                    value = cell.getBooleanCellValue() + "";
+                    value.trim();
+                    break;
+                case HSSFCell.CELL_TYPE_FORMULA: // 公式
+                    value = cell.getCellFormula() + "";
+                    value.trim();
+                    break;
+//                case HSSFCell.CELL_TYPE_BLANK: // 空值
+//                    value = null;
+//                    break;
+//                case HSSFCell.CELL_TYPE_ERROR: // 故障
+//                    value = "非法字符";
+//                    break;
+                default:
+                    value = null;
+                    break;
+            }
+        }
+        return value;
+    }
 
-    /**
-     * 导出
-     * @param user 带着查询条件用户对象
-     * @param response 响应对象
-     */
+        /**
+         * 导出
+         * @param user 带着查询条件用户对象
+         * @param response 响应对象
+         */
     @RequestMapping("/exportFile")
     public void exportFile(User user, HttpServletResponse response) throws Exception {
         // 导入 导出 excel 参与 ： https://www.cnblogs.com/linjiqin/p/10975761.html

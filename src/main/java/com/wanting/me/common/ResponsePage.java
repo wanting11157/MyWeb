@@ -41,6 +41,9 @@ public class ResponsePage extends ResponseResult implements Serializable {
     }
 
     public Integer getRows() {
+        if(this.rows == null){
+            this.rows = 30;
+        }
         return rows;
     }
 

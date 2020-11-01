@@ -66,6 +66,9 @@
             <if test="user.college!=null and user.college!=''">
                 and college=#{user.college}
             </if>
+            <if test="user.password!=null and user.password!=''">
+                and password=#{user.password}
+            </if>
             <if test="user.updateTime!=null and user.updateTime!=''">
                 and DATE_FORMAT(update_time,'%Y-%m-%d')  =  #{user.updateTime}
             </if>
@@ -74,6 +77,9 @@
             </if>
             <if test="user.remark!=null and user.remark!=''">
                 and remark like concat('%',#{user.remark},'%')
+            </if>
+            <if test="user.photo!=null and user.photo!=''">
+                and photo=#{user.photo}
             </if>
         </where>
         limit #{start},#{rows}

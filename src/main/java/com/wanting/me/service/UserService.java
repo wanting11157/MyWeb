@@ -20,7 +20,7 @@ public interface UserService {
 
     void hasPhoto(Integer id)throws Exception;
 
-    Integer importExcel(MultipartFile file)throws Exception;
+
 
     List<User> searchAll() throws Exception;
 }
