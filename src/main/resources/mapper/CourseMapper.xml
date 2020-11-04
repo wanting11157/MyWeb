@@ -95,4 +95,8 @@
             </if>
         </where>
     </select>
+
+    <select id="searchAll" resultType="Course">
+        select  * from course
+    </select>
 </mapper>

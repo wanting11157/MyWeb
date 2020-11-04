@@ -28,17 +28,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
 @Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController {
     //Logger log = LoggerFactory.getLogger(UserController.class);
-    private final static String XLS = "xls";
-    private final static String XLSX = "xlsx";
+
 
     @Autowired
     private UserService userService;
@@ -240,6 +238,7 @@ public class UserController {
 
             file.transferTo(dest);
 
+
             result.setData(""+l+s.substring(2)+endName);
 //            userService.hasPhoto(id);
 
@@ -252,6 +251,42 @@ public class UserController {
         return result;
     }
 
+    @RequestMapping("/fuwenben")
+    @ResponseBody
+    public ResponseResult insertPicture(MultipartFile file) throws Exception{
+
+        ResponseResult result = new ResponseResult();
+        String originalFilename = file.getOriginalFilename();
+        int index = originalFilename.lastIndexOf('.');
+        String endName = originalFilename.substring(index);
+        File userPath = new File(basePath+userImg);
+        boolean exists = userPath.exists();
+
+        long l = System.currentTimeMillis();
+        double random = Math.random();
+        String s = random + "";
+
+        if(!exists){
+            userPath.mkdirs();
+        }
+        String path = basePath+userImg+l+s.substring(2)+endName;
+        File dest = new File(path);
+        try {
+
+            file.transferTo(dest);
+            result.setCode(0);
+            Map<String,String> map = new HashMap<>(1);
+            map.put("src","http://localhost/api/user/downloadFile?fileName="+l+s.substring(2)+endName);
+            result.setData(map);
+
+        }catch (Exception e){
+            String msg = "上传异常";
+            result.setCode(WebResponse.ERROR);
+            result.setMsg(msg);
+            log.error(msg,e);
+        }
+        return result;
+    }
     @RequestMapping("/downloadFile")
     public void downloadFile(Integer userId, String fileName, HttpServletResponse response) {
         // 导入 导出 excel 参与 ： https://www.cnblogs.com/linjiqin/p/10975761.html
@@ -298,156 +333,39 @@ public class UserController {
     @ResponseBody
     public ResponseResult importExcel(MultipartFile file) throws Exception {
 
-        //        1、用HSSFWorkbook打开或者创建“Excel文件对象”
-        //
-        //        2、用HSSFWorkbook对象返回或者创建Sheet对象
-        //
-        //        3、用Sheet对象返回行对象，用行对象得到Cell对象
-        //
-        //        4、对Cell对象读写。
-        //获得文件名
+
         ResponseResult responseResult = new ResponseResult();
-        Integer successCount = 0;
-        Integer repeat =0;
-        Integer error = 0;
-        int add;
-        List<User> errUser = null;
-        Workbook workbook = null;
-        String fileName = file.getOriginalFilename();
-        if (fileName.endsWith(XLS)) {
-            //2003
-            workbook = new HSSFWorkbook(file.getInputStream());
-        } else if (fileName.endsWith(XLSX)) {
-            //2007
-            workbook = new XSSFWorkbook(file.getInputStream());
-        } else {
-            throw new Exception("文件不是Excel文件");
-        }
 
-        Sheet sheet = workbook.getSheet("sheet1");
-        // 指的行数，一共有多少行+
-        int rows = sheet.getLastRowNum();
-        if (rows == 0) {
-            throw new Exception("请填写数据");
-        }
-        for (int i = 1; i <= rows + 1; i++) {
-            // 读取左上端单元格
-            Row row = sheet.getRow(i);
-            // 行不为空
-            if (row != null) {
-                // **读取cell**
-                User user = new User();
-                //姓名
-                String name = getCellValue(row.getCell(0));
-                user.setName(name);
-                //班级
-                String major = getCellValue(row.getCell(1));
-                user.setMajor(major);
-                //分数
-                String haoma = getCellValue(row.getCell(2));
-                user.setHaoma(haoma);
-
-                String sex = getCellValue(row.getCell(3));
-                if (sex.equals("男")) {
-                    user.setSex(1);
-                } else if (sex.equals("女")) {
-                    user.setSex(2);
-                }
-
-                String college = getCellValue(row.getCell(4));
-                user.setCollege(college);
-
-                String password = getCellValue(row.getCell(5));
-                user.setPassword(password);
-
-                String remark = getCellValue(row.getCell(6));
-                user.setRemark(remark);
-
-                String photo = getCellValue(row.getCell(7));
-                user.setPhoto(photo);
-
-                List<User> resuUser = userService.search(user,null,2);
-                if (resuUser.size()>0){
-                    repeat++;
-                }else{
-                    add = userService.add(user);
-                    if (add == 1) {
-                        successCount++;
-                    }else{
-                        error++;
-                        errUser.add(user);
-                        responseResult.setCode(WebResponse.ERROR);
-                    }
-                }
+        Map resuMap = userService.importExcel(file);
 
 
+        if(resuMap.containsKey("code")==true){
+            if(WebResponse.ERROR==(int)resuMap.get("code")){
+                responseResult.setCode(WebResponse.ERROR);
             }
         }
-        responseResult.setData("成功插入"+successCount+"条，因重复而未插入"+repeat+"条，插入异常"
-                +error+"条，插入异常而并未插入的数据为"+errUser);
+       responseResult.setData("成功插入"+resuMap.get("success")+"条，因重复而未插入"+
+                       resuMap.get("repeat")+"条，插入异常" +resuMap.get("error")+
+               "条，插入异常而并未插入的数据为"+resuMap.get("errUser"));
         return responseResult;
+
     }
 
-    public String getCellValue(Cell cell) {
-        String value = null;
-        if (cell != null) {
-            // 以下是判断数据的类型
-            switch (cell.getCellType()) {
-                // 数字
-                case HSSFCell.CELL_TYPE_NUMERIC:
-                    value = cell.getNumericCellValue() + "";
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                        Date date = cell.getDateCellValue();
-                        if (date != null) {
-                            value = new SimpleDateFormat("yyyy-MM-dd").format(date);
-                        } else {
-                            value = "";
-                        }
-                    } else {
-                        value = new DecimalFormat("0").format(cell.getNumericCellValue());
-                    }
-                    value.trim();
-                    break;
-                case HSSFCell.CELL_TYPE_STRING: // 字符串
-                    value = cell.getStringCellValue();
-                    value.trim();
-                    break;
-                case HSSFCell.CELL_TYPE_BOOLEAN: // Boolean
-                    value = cell.getBooleanCellValue() + "";
-                    value.trim();
-                    break;
-                case HSSFCell.CELL_TYPE_FORMULA: // 公式
-                    value = cell.getCellFormula() + "";
-                    value.trim();
-                    break;
-//                case HSSFCell.CELL_TYPE_BLANK: // 空值
-//                    value = null;
-//                    break;
-//                case HSSFCell.CELL_TYPE_ERROR: // 故障
-//                    value = "非法字符";
-//                    break;
-                default:
-                    value = null;
-                    break;
-            }
-        }
-        return value;
-    }
 
         /**
          * 导出
          * @param user 带着查询条件用户对象
          * @param response 响应对象
          */
-    @RequestMapping("/exportFile")
-    public void exportFile(User user, HttpServletResponse response) throws Exception {
+    @RequestMapping("/exportExcel")
+    public void exportExcel(User user, HttpServletResponse response) throws Exception {
         // 导入 导出 excel 参与 ： https://www.cnblogs.com/linjiqin/p/10975761.html
 //        try {
 
         // 第一步，创建一个webbook，对应一个Excel文件
         HSSFWorkbook wb = new HSSFWorkbook();
         // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-        HSSFSheet sheet = wb.createSheet("sheet1");
+        HSSFSheet sheet = wb.createSheet("user表");
         // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
         HSSFRow row = sheet.createRow(0);
         // 第四步，创建单元格，并设置值表头 设置表头居中
@@ -498,9 +416,11 @@ public class UserController {
         cell.setCellValue("头像");
         cell.setCellStyle(style);
 
-        // 第五步，写入实体数据 实际应用中这些数据从数据库得到，
-//                List<Student> list = userMapper.selectAll();
-        //查出要导出的用户信息 List<User> users;
+        cell = row.createCell(11);
+        cell.setCellValue("个人详情");
+        cell.setCellStyle(style);
+
+
         List<User> users = userService.searchAll();
 
         for (int i = 0; i < users.size(); i++) {
@@ -522,13 +442,14 @@ public class UserController {
             row.createCell(8).setCellValue(user1.getCreateTime());
             row.createCell(9).setCellValue(user1.getRemark());
             row.createCell(10).setCellValue(user1.getPhoto());
+            row.createCell(11).setCellValue(user1.getDetails());
 //                    cell = row.createCell(3);
 //                    cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(stu.getTime()));
         }
         //第六步,输出Excel文件
         OutputStream output = response.getOutputStream();
         response.reset();
-        long filename = System.currentTimeMillis();
+//        long filename = System.currentTimeMillis();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
         String fileName = df.format(new Date());// new Date()为获取当前系统时间
         response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xls");

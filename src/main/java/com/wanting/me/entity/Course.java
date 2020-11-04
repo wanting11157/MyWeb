@@ -4,7 +4,6 @@ public class Course extends Base{
 
     private Integer id;
     private String name;
-    private Integer teacherId;
     private String teacherName;
     private String college;
     private String team;
@@ -27,13 +26,6 @@ public class Course extends Base{
         this.name = name;
     }
 
-    public Integer getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
-    }
 
     public String getTeacherName() {
         return teacherName;
@@ -64,7 +56,6 @@ public class Course extends Base{
         return "Course{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", teacherId=" + teacherId +
                 ", teacherName='" + teacherName + '\'' +
                 ", college='" + college + '\'' +
                 ", team='" + team + '\'' +

@@ -11,6 +11,15 @@ public class User extends Base{
       private String college;
       private String password;
       private String photo;
+      private String details;
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
     public String getPhoto() {
         return photo;
@@ -87,6 +96,7 @@ public class User extends Base{
                 ", college='" + college + '\'' +
                 ", password='" + password + '\'' +
                 ", photo='" + photo + '\'' +
+                ", details='" + details + '\'' +
                 '}';
     }
 }

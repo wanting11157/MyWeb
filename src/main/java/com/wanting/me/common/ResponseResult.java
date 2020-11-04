@@ -12,6 +12,7 @@ public class ResponseResult implements Serializable {
     private String msg;
     private Object data;
 
+
     public Integer getCode() {
 
         if(this.code == null){

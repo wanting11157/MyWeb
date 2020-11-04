@@ -1,6 +1,7 @@
 package com.wanting.me.service.impl;
 
 import com.wanting.me.common.ResponsePage;
+import com.wanting.me.common.WebResponse;
 import com.wanting.me.entity.Score;
 import com.wanting.me.entity.User;
 import com.wanting.me.mapper.ScoreMapper;
@@ -23,20 +24,22 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final static String XLS = "xls";
+    private final static String XLSX = "xlsx";
 
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private ScoreMapper scoreMapper;
 
-    private final static String XLS = "xls";
-    private final static String XLSX = "xlsx";
 
     @Override
     public Integer add(User user) throws Exception {
@@ -157,6 +160,162 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> searchAll() throws Exception {
         return userMapper.searchAll();
+    }
+
+    private String getCellValue(Cell cell) {
+        String value = null;
+        if (cell != null) {
+            // 以下是判断数据的类型
+            switch (cell.getCellType()) {
+                // 数字
+                case HSSFCell.CELL_TYPE_NUMERIC:
+                    value = cell.getNumericCellValue() + "";
+                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                        Date date = cell.getDateCellValue();
+                        if (date != null) {
+                            value = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                        } else {
+                            value = "";
+                        }
+                    } else {
+                        value = new DecimalFormat("0").format(cell.getNumericCellValue());
+                    }
+                    value.trim();
+                    break;
+                case HSSFCell.CELL_TYPE_STRING: // 字符串
+                    value = cell.getStringCellValue();
+                    value.trim();
+                    break;
+                case HSSFCell.CELL_TYPE_BOOLEAN: // Boolean
+                    value = cell.getBooleanCellValue() + "";
+                    value.trim();
+                    break;
+                case HSSFCell.CELL_TYPE_FORMULA: // 公式
+                    value = cell.getCellFormula() + "";
+                    value.trim();
+                    break;
+//                case HSSFCell.CELL_TYPE_BLANK: // 空值
+//                    value = null;
+//                    break;
+//                case HSSFCell.CELL_TYPE_ERROR: // 故障
+//                    value = "非法字符";
+//                    break;
+                default:
+                    value = null;
+                    break;
+            }
+        }
+        return value;
+    }
+
+
+    @Override
+    public Map importExcel(MultipartFile file) throws Exception {
+        //1、用HSSFWorkbook打开或者创建“Excel文件对象”
+        //2、用HSSFWorkbook对象返回或者创建Sheet对象
+        //3、用Sheet对象返回行对象，用行对象得到Cell对象
+        //4、对Cell对象读写。
+
+        Integer successCount = 0;
+        Integer repeat =0;
+        Integer error = 0;
+        int add;
+        Map<String,Object> map = new HashMap<>();
+        List<User> errUser = null;
+        Workbook workbook = null;
+        String fileName = file.getOriginalFilename();
+        if (fileName.endsWith(XLS)) {
+            //2003
+            workbook = new HSSFWorkbook(file.getInputStream());
+        } else if (fileName.endsWith(XLSX)) {
+            //2007
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } else {
+            throw new Exception("文件不是Excel文件");
+        }
+
+
+        /*
+        这个是为了适应excel文件有多页面，就是多个sheet页
+        Iterator<Sheet> sheetIterator = workbook.sheetIterator();
+        while(sheetIterator.hasNext()){
+            Sheet sheet = sheetIterator.next();
+
+        }*/
+
+
+//        Sheet sheet = workbook.getSheet("sheet1");
+        Sheet sheet = workbook.getSheetAt(0);
+        // 指的行数，一共有多少行+
+        int rows = sheet.getLastRowNum();
+        if (rows == 0) {
+            throw new Exception("请填写数据");
+        }
+        for (int i = 1; i <= rows + 1; i++) {
+            // 读取左上端单元格
+            Row row = sheet.getRow(i);
+
+            //  function covertRow2Obj(row,User)  //  返回就是user
+            // 行不为空
+            if (row != null) {
+                // **读取cell**
+                User user = new User();
+                //姓名
+                String name = getCellValue(row.getCell(0));
+                user.setName(name);
+                //班级
+                String major = getCellValue(row.getCell(1));
+                user.setMajor(major);
+                //分数
+                String haoma = getCellValue(row.getCell(2));
+                user.setHaoma(haoma);
+
+                String sex = getCellValue(row.getCell(3));
+                if (sex.equals("男")) {
+                    user.setSex(1);
+                } else if (sex.equals("女")) {
+                    user.setSex(2);
+                }
+
+                String college = getCellValue(row.getCell(4));
+                user.setCollege(college);
+
+                String password = getCellValue(row.getCell(5));
+                user.setPassword(password);
+
+                String remark = getCellValue(row.getCell(6));
+                user.setRemark(remark);
+
+                String photo = getCellValue(row.getCell(7));
+                user.setPhoto(photo);
+
+                String details = getCellValue(row.getCell(8));
+                user.setDetails(details);
+
+                List<User> resuUser = search(user,null,2);
+                if (resuUser.size()>0){
+                    repeat++;
+                }else{
+                    add = userMapper.add(user);
+                    if (add == 1) {
+                        successCount++;
+                    }else{
+                        error++;
+                        errUser.add(user);
+                        map.put("code",WebResponse.ERROR);
+//                        responseResult.setCode();
+                    }
+                }
+
+
+            }
+        }
+        map.put("success",successCount);
+        map.put("repeat",repeat);
+        map.put("error",error);
+        map.put("errUser",errUser);
+
+        return map;
     }
 
 

@@ -3,8 +3,10 @@ package com.wanting.me.service;
 
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface CourseService {
@@ -16,4 +18,8 @@ public interface CourseService {
     Integer countTotal(Course course,Integer page ,Integer rows)throws Exception;
 
     Integer dels(Integer[] ids) throws Exception;
+
+    Map importExcel(MultipartFile file) throws Exception;
+
+    List<Course> searchAll() throws Exception;
 }

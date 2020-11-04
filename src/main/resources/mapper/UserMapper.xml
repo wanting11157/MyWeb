@@ -4,9 +4,9 @@
 
    <insert id="add" parameterType="User">
        INSERT INTO user
-        (name, major, haoma, sex, college, password, create_time,remark,photo)
+        (name, major, haoma, sex, college, password, create_time,remark,photo,details)
         VALUES
-        ( #{name}, #{major}, #{haoma}, #{sex}, #{college}, #{password},now(), #{remark},#{photo})
+        ( #{name}, #{major}, #{haoma}, #{sex}, #{college}, #{password},now(), #{remark},#{photo},#{details})
    </insert>
 
     <delete id="del" parameterType="Integer">
@@ -32,7 +32,8 @@
         password = #{password},
         update_time = now(),
         remark = #{remark},
-        photo=#{photo}
+        photo=#{photo},
+        details=#{details}
         where
         id=#{id}
     </update>
@@ -81,6 +82,9 @@
             <if test="user.photo!=null and user.photo!=''">
                 and photo=#{user.photo}
             </if>
+            <if test="user.details!=null and user.details!=''">
+                and details=#{user.details}
+            </if>
         </where>
         limit #{start},#{rows}
     </select>
@@ -114,6 +118,9 @@
             </if>
             <if test="user.remark!=null and user.remark!=''">
                 and remark like concat('%',#{user.remark},'%')
+            </if>
+            <if test="user.details!=null and user.details!=''">
+                and details=#{user.details}
             </if>
         </where>
     </select>

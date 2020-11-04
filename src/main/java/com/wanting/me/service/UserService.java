@@ -5,6 +5,7 @@ import com.wanting.me.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface UserService {
@@ -23,4 +24,6 @@ public interface UserService {
 
 
     List<User> searchAll() throws Exception;
+
+    Map importExcel(MultipartFile file) throws Exception;
 }
