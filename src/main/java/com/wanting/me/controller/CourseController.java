@@ -178,7 +178,7 @@ public class CourseController {
      * @param response 响应对象
      */
     @RequestMapping("/exportExcel")
-    public void exportExcel(User user, HttpServletResponse response) throws Exception {
+    public void exportExcel(HttpServletResponse response) throws Exception {
 
         // 第一步，创建一个webbook，对应一个Excel文件
         HSSFWorkbook wb = new HSSFWorkbook();

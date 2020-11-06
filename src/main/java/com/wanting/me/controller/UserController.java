@@ -358,7 +358,7 @@ public class UserController {
          * @param response 响应对象
          */
     @RequestMapping("/exportExcel")
-    public void exportExcel(User user, HttpServletResponse response) throws Exception {
+    public void exportExcel(HttpServletResponse response) throws Exception {
         // 导入 导出 excel 参与 ： https://www.cnblogs.com/linjiqin/p/10975761.html
 //        try {
 

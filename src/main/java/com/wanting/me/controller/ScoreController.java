@@ -29,6 +29,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -212,7 +214,115 @@ public class ScoreController {
         return result;
     }
 
+    /**
+     * 导出
+     *
+     * @param response 响应对象
+     */
+    @RequestMapping("/exportExcel")
+    public void exportExcel(HttpServletResponse response) throws Exception {
 
+        // 第一步，创建一个webbook，对应一个Excel文件
+        HSSFWorkbook wb = new HSSFWorkbook();
+        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+        HSSFSheet sheet = wb.createSheet("score表");
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+        HSSFRow row = sheet.createRow(0);
+        // 第四步，创建单元格，并设置值表头 设置表头居中
+        HSSFCellStyle style = wb.createCellStyle();
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue("id");
+        cell.setCellStyle(style);
 
+        cell = row.createCell(1);
+        cell.setCellValue("学生姓名");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(2);
+        cell.setCellValue("成绩");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(3);
+        cell.setCellValue("课程名");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(4);
+        cell.setCellValue("教师名");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(5);
+        cell.setCellValue("创建时间");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(6);
+        cell.setCellValue("更新时间");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(7);
+        cell.setCellValue("备注");
+        cell.setCellStyle(style);
+
+        List<ScoreDto> scoreDtos = scoreService.searchAll();
+
+        for (int i = 0; i < scoreDtos.size(); i++) {
+            row = sheet.createRow(i + 1);
+            ScoreDto scoreDto1 = scoreDtos.get(i);
+            // 第四步，创建单元格，并设置值
+            row.createCell(0).setCellValue(scoreDto1.getId());
+            row.createCell(1).setCellValue(scoreDto1.getStudentName());
+            row.createCell(2).setCellValue(scoreDto1.getScore());
+            row.createCell(3).setCellValue(scoreDto1.getCourseName());
+            row.createCell(4).setCellValue(scoreDto1.getTeacherName());
+            row.createCell(5).setCellValue(scoreDto1.getCreateTime());
+            row.createCell(6).setCellValue(scoreDto1.getUpdateTime());
+            row.createCell(7).setCellValue(scoreDto1.getRemark());
+        }
+        //第六步,输出Excel文件
+        OutputStream output = response.getOutputStream();
+        response.reset();
+//        long filename = System.currentTimeMillis();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
+        String fileName = df.format(new Date());// new Date()为获取当前系统时间
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xls");
+        response.setContentType("application/msexcel");
+        wb.write(output);
+        output.close();
+    }
+
+    /**
+     * 导入
+     * @param file
+     * @return
+     */
+    @RequestMapping("/importExcel")
+    @ResponseBody
+    public ResponseResult importExcel(MultipartFile file) throws Exception {
+
+        ResponseResult responseResult = new ResponseResult();
+
+        Map resuMap = scoreService.importExcel(file);
+
+        Integer successCount = (int)resuMap.get("success");
+        Integer repeat = (int)resuMap.get("repeat");
+        Integer error = (int)resuMap.get("error");
+        resuMap.remove("success");
+        resuMap.remove("repeat");
+        resuMap.remove("error");
+        String data = "成功插入" + successCount + "条，因重复而未插入" +
+                repeat + "条，插入异常" + error + "条";
+
+        if(error>0){
+            responseResult.setCode(WebResponse.ERROR);
+            Set<Map.Entry<Object,Object>> entries = resuMap.entrySet();
+            data = data +"。错误信息为：";
+            for(Map.Entry<Object,Object> entry:entries){
+                data = data + entry.getKey()+"存在问题，问题是："+entry.getValue();
+            }
+        }
+
+        responseResult.setData(data);
+        return responseResult;
+    }
 }

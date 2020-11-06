@@ -33,4 +33,6 @@ public interface ScoreMapper {
     Integer delByIds(Integer[] ids) throws SQLException;
 
     List<Score> checkrepeatscore(Score score) throws SQLException;
+
+    List<ScoreDto> searchAll() throws SQLException;
 }

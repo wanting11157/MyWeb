@@ -120,6 +120,17 @@
         limit #{start},#{rows}
     </select>
 
+    <select id="searchAll"  resultType="com.wanting.me.dto.ScoreDto">
+        select
+        score.*,
+        course.name as courseName,
+        course.teacher_name as teacherName,
+        user.name as studentName
+        from score
+        left join course on score.course_id=course.id
+        left join user on score.student_id=user.id
+    </select>
+
 
 
     <select id="countTotal"  resultType="Integer">

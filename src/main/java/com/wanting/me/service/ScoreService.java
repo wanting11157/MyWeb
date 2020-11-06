@@ -6,9 +6,11 @@ import com.wanting.me.dto.ScoreDto;
 import com.wanting.me.entity.Course;
 import com.wanting.me.entity.Score;
 import com.wanting.me.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 
 public interface ScoreService {
@@ -26,5 +28,9 @@ public interface ScoreService {
 
     List<Score> getByStuIds(Integer[] stuIds) throws Exception;
 
-    Integer dels(Integer[] ids) throws Exception;;
+    Integer dels(Integer[] ids) throws Exception;
+
+    List<ScoreDto> searchAll() throws Exception;
+
+    Map importExcel(MultipartFile file) throws Exception;
 }
