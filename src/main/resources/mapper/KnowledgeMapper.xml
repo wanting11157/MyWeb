@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wanting.me.mapper.KnowledgeMapper">
+    <select id="start" resultType="Knowledge">
+       select * from knowledge
+    </select>
+    <insert id="add" parameterType="Integer">
+       INSERT INTO knowledge
+        (parent_id,title,create_time)
+        VALUES
+        (#{parentId}, '未命名', now())
+   </insert>
+    <update id="submit" parameterType="Knowledge">
+        UPDATE knowledge SET
+        head = #{head},
+        content = #{content},
+        update_time=now()
+        where
+        id=#{id}
+    </update>
+    <update id="update" parameterType="Knowledge">
+        UPDATE knowledge SET
+        title = #{title}
+        where
+        id=#{id}
+    </update>
+    <delete id="del" parameterType="Knowledge">
+
+        WITH RECURSIVE td AS (
+            SELECT * FROM knowledge WHERE id = #{id}
+            UNION ALL
+            SELECT c.* FROM knowledge c ,td WHERE c.parent_id = td.id
+        )
+        DELETE FROM knowledge WHERE id in(
+            SELECT td.id FROM td ORDER BY td.id
+        )
+
+    </delete>
+
+</mapper>
