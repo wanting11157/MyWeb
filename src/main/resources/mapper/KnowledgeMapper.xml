@@ -36,5 +36,13 @@
         )
 
     </delete>
+<!--
+Integer genAdd() throws SQLException;-->
+    <insert id="genAdd">
+       INSERT INTO knowledge
+        (parent_id,title,create_time)
+        VALUES
+        ('0', '未命名', now())
+   </insert>
 
 </mapper>

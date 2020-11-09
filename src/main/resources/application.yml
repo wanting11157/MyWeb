@@ -21,5 +21,7 @@ logging:
     com.wanting.me.mapper: debug
 upload:
   temp: C:\workspace57\MyWebFont\resources\upload\
+  knowledge:
+    img: images\knowledge\
   user:
     img: images\user\

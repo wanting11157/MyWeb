@@ -17,4 +17,6 @@ public interface KnowledgeMapper {
     Integer update(Knowledge knowledge) throws SQLException;
 
     Integer del(Integer id) throws SQLException;
+
+    Integer genAdd() throws SQLException;
 }

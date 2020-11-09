@@ -39,4 +39,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     public Integer del(Integer id) throws Exception {
         return knowledgeMapper.del(id);
     }
+
+    @Override
+    public Integer genAdd() throws Exception {
+        return knowledgeMapper.genAdd();
+    }
 }
