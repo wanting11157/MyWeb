@@ -36,8 +36,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     }
 
     @Override
-    public Integer del(Integer id) throws Exception {
-        return knowledgeMapper.del(id);
+    public Integer dels(Integer[] ids) throws Exception {
+        return knowledgeMapper.dels(ids);
     }
 
     @Override

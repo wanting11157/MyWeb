@@ -24,20 +24,26 @@
         where
         id=#{id}
     </update>
-    <delete id="del" parameterType="Knowledge">
+<!--    <delete id="del" parameterType="Knowledge">-->
 
-        WITH RECURSIVE td AS (
-            SELECT * FROM knowledge WHERE id = #{id}
-            UNION ALL
-            SELECT c.* FROM knowledge c ,td WHERE c.parent_id = td.id
-        )
-        DELETE FROM knowledge WHERE id in(
-            SELECT td.id FROM td ORDER BY td.id
-        )
+<!--        WITH RECURSIVE td AS (-->
+<!--            SELECT * FROM knowledge WHERE id = #{id}-->
+<!--            UNION ALL-->
+<!--            SELECT c.* FROM knowledge c ,td WHERE c.parent_id = td.id-->
+<!--        )-->
+<!--        DELETE FROM knowledge WHERE id in(-->
+<!--            SELECT td.id FROM td ORDER BY td.id-->
+<!--        )-->
 
+<!--    </delete>-->
+
+
+    <delete id="dels" >
+        delete from knowledge where id in
+        <foreach collection="array" open="(" close=")"  separator="," item="id" >
+            #{id}
+        </foreach>
     </delete>
-<!--
-Integer genAdd() throws SQLException;-->
     <insert id="genAdd">
        INSERT INTO knowledge
         (parent_id,title,create_time)

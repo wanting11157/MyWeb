@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -89,16 +90,20 @@ public class KnowledgeController {
         return responseResult;
     }
 
-    @RequestMapping("/del")
+    @RequestMapping("/dels")
     @ResponseBody
-    public ResponseResult del(Integer id) throws Exception{
+    public ResponseResult dels(@RequestParam("ids[]") Integer[] ids) throws Exception{
         ResponseResult responseResult = new ResponseResult();
 
-        Integer del = knowledgeService.del(id);
-        if(del<1){
+        Integer dels = knowledgeService.dels(ids);
+        if(dels==null||dels==0){
             responseResult.setCode(WebResponse.ERROR);
-            responseResult.setMsg(WebResponse.MSG_ERROR);
+            responseResult.setMsg("没有一个节点是删除成功的");
+        }else if(dels!=ids.length){
+            responseResult.setCode(WebResponse.ERROR);
+            responseResult.setMsg("部分节点删除成功");
         }
+
         return responseResult;
     }
 

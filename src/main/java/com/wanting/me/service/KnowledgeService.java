@@ -13,7 +13,7 @@ public interface KnowledgeService {
 
     Integer update(Knowledge knowledge) throws Exception;
 
-    Integer del(Integer id) throws Exception;
+    Integer dels(Integer[] ids) throws Exception;
 
     Integer genAdd() throws Exception;
 }
