@@ -11,9 +11,6 @@ public class Score extends Base implements Serializable {
     private Integer studentId;
 
 
-
-
-
     public Integer getId() {
         return id;
     }

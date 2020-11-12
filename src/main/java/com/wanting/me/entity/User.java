@@ -1,7 +1,9 @@
 package com.wanting.me.entity;
 
 
-public class User extends Base{
+import java.io.Serializable;
+
+public class User extends Base implements Serializable {
 
       private Integer id;
       private String name;

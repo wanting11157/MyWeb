@@ -2,8 +2,10 @@ package com.wanting.me.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 
-public class Knowledge extends Base{
+
+public class Knowledge extends Base implements Serializable {
 
     private Integer id;
     private Integer parentId;

@@ -1,14 +1,14 @@
 package com.wanting.me.entity;
 
-public class Course extends Base{
+import java.io.Serializable;
+
+public class Course extends Base implements Serializable {
 
     private Integer id;
     private String name;
     private String teacherName;
     private String college;
     private String team;
-
-
 
     public Integer getId() {
         return id;
