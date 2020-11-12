@@ -1,8 +1,9 @@
 package com.wanting.me.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Base {
+public class Base implements Serializable {
     private String updateTime;
     private String createTime;
     private String remark;
