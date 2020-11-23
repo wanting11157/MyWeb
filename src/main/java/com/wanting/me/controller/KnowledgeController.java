@@ -56,10 +56,15 @@ public class KnowledgeController {
     public ResponseResult add(Integer parentId) throws Exception{
         ResponseResult responseResult = new ResponseResult();
 
-        Integer add1 = knowledgeService.add(parentId);
+        Knowledge knowledge = new Knowledge();
+        knowledge.setParentId(parentId);
+
+        Integer add1 = knowledgeService.add(knowledge);
         if(add1!=1){
             responseResult.setCode(WebResponse.ERROR);
             responseResult.setMsg(WebResponse.MSG_ERROR);
+        }else {
+            responseResult.setData(knowledge.getId());
         }
         return responseResult;
     }

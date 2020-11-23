@@ -21,8 +21,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     }
 
     @Override
-    public Integer add(Integer parentId) throws Exception {
-        return knowledgeMapper.add(parentId);
+    public Integer add(Knowledge knowledge) throws Exception {
+        return knowledgeMapper.add(knowledge);
     }
 
     @Override

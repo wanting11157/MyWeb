@@ -4,7 +4,7 @@
     <select id="start" resultType="Knowledge">
        select * from knowledge
     </select>
-    <insert id="add" parameterType="Integer">
+    <insert id="add" parameterType="Knowledge" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
        INSERT INTO knowledge
         (parent_id,title,create_time)
         VALUES

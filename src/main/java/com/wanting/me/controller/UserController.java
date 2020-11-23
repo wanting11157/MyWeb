@@ -1,6 +1,7 @@
 package com.wanting.me.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.wanting.me.common.ResponsePage;
 import com.wanting.me.common.ResponseResult;
 import com.wanting.me.common.WebResponse;
@@ -16,10 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -68,9 +66,10 @@ public class UserController {
 
     @RequestMapping("/add")
     @ResponseBody
-    public ResponseResult add(User user ) throws Exception{
+    public ResponseResult add(User user) throws Exception{
 
         ResponseResult result = new ResponseResult();
+//        log.info("------"+JSONObject.toJSONString(user));
         Integer add = userService.add(user);
         if(add == null || add.intValue() < 1){
             result.setCode(WebResponse.ERROR);
@@ -105,7 +104,7 @@ public class UserController {
 
     @RequestMapping("/getById")
     @ResponseBody
-    public ResponseResult getById(Integer id) throws Exception{
+    public ResponseResult getById(@RequestParam("id") Integer id) throws Exception{
         ResponseResult result = new ResponseResult();
         User user = userService.getById(id);
         if(user == null){

@@ -7,7 +7,7 @@ import java.util.List;
 public interface KnowledgeService {
     List<Knowledge> start() throws Exception;
 
-    Integer add(Integer parentId) throws Exception;
+    Integer add(Knowledge knowledge) throws Exception;
 
     Integer submit(Knowledge knowledge) throws Exception;
 

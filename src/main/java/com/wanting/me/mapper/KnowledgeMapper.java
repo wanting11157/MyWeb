@@ -10,7 +10,7 @@ import java.util.List;
 public interface KnowledgeMapper {
     List<Knowledge> start() throws SQLException;
 
-    Integer add(Integer parentId) throws SQLException;
+    Integer add(Knowledge knowledge) throws SQLException;
 
     Integer submit(Knowledge knowledge) throws SQLException;
 
